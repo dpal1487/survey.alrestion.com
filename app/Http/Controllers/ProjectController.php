@@ -14,6 +14,7 @@ use App\Http\Resources\SupplierListResource;
 use App\Http\Resources\SupplierProjectResource;
 use App\Imports\IdImport;
 use App\Models\Client;
+use App\Models\CloseProject;
 use App\Models\Country;
 use App\Models\Project;
 use App\Models\ProjectLink;
@@ -243,18 +244,24 @@ class ProjectController extends Controller
 
     public function status(Request $request)
     {
-
-        // $projects = Respondent::where('project_id', '=', $request->id)->where('status', '!=', 'complete')
-        //     ->orWhereNull('status')
-        //     ->get();
-
-        // ->where('status', '!=', 'complete')->orWhere('status', '=', NULL)->get();
-
-        // return $projects;
         if ($request->status == 'close') {
-            $projects = Respondent::where('project_id', '=', $request->id)->where('status', '!=', 'complete')->orWhere('status', '=', null)->delete();
-
-            // return $projects;
+            $projects = Respondent::where('project_id', '=', $request->id)->get();
+            foreach ($projects as $project) {
+                $closeProject = CloseProject::create([
+                    'client_browser' => $project->client_browser,
+                    'device' => $project->device,
+                    'end_ip' => $project->end_ip,
+                    'id' => $project->id,
+                    'project_id' => $project->project_id,
+                    'project_link_id' => $project->project_link_id,
+                    'starting_ip' => $project->starting_ip,
+                    'status' => $project->status,
+                    'supplier_id' => $project->supplier_id,
+                    'supplier_project_id' => $project->supplier_project_id,
+                    'user_id' => $project->user_id,
+                ]);
+            }
+            $projects = Respondent::where('project_id', '=', $request->id)->delete();
         }
         if (Project::where(['id' => $request->id])->update(['status' => $request->status])) {
             return response()->json(updateMessage('Project status'));

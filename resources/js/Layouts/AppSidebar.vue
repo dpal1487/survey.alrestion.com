@@ -48,6 +48,12 @@ export default defineComponent({
                     icon: "bi bi-person-badge-fill",
                     role: ["pm", "admin"],
                 },
+                 {
+                    link: "/close-projects",
+                    title: "Close-projects",
+                    icon: "bi bi-person-badge-fill",
+                    role: ["pm", "admin"],
+                },
             ],
         };
     },

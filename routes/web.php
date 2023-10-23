@@ -3,6 +3,7 @@
 use App\Http\Controllers\AccountController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\CloseProjectController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ExportExcelController;
 use App\Http\Controllers\ProjectController;
@@ -188,6 +189,16 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
                 Route::post('/account', 'updateAccount')->name('company.updateAccount');
             });
         });
+
+        Route::controller(CloseProjectController::class)->group(function () {
+
+            Route::get('/close-projects', 'index')->name('close-projects');
+
+            Route::post('close-project/restore', 'restore')->name('close-project.restore');
+
+            Route::post('close-project/close-delete', 'closeDelete')->name('close-project.close-delete');
+
+        });
     });
 
     Route::group(['middleware' => 'role:account,admin'], function () {
@@ -222,3 +233,6 @@ Route::group(['prefix' => 'survey'], function () {
 Route::group(['prefix' => 'redirect'], function () {
     Route::get('{slug}', [RedirectController::class, 'surveyEnd']);
 });
+
+
+

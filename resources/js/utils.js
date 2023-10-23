@@ -105,6 +105,22 @@ export default {
                 toast.error(error.message)
             });
     },
+
+    async restoreProject(route, params) {
+        await axios
+            .post(route, params)
+            .then((response) => {
+                if (response.data.success) {
+                    toast.success(response.data.message)
+                    Inertia.get('close-projects');
+                } else {
+                    toast.error(response.data.message)
+                }
+            })
+            .catch(function (error) {
+                toast.error(error.message)
+            });
+    },
     async cloneProject(route, params) {
         await axios
             .post(route, params)
