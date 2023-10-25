@@ -17,6 +17,7 @@ export default defineComponent({
             form: {},
             tbody: [
                 "S.No",
+                'RESPONDENT ID',
                 "Project Name",
                 "STARTING IP",
                 "END IP",
@@ -143,6 +144,7 @@ export default defineComponent({
                         <tbody class="fw-semibold text-gray-600">
                             <tr v-for="(survey, index) in surveys.data" :key="index">
                                 <td>{{ index + 1 }}</td>
+                                <td>{{ survey?.id }}</td>
                                 <td>{{ survey.project_id }}</td>
                                 <td>{{ survey.starting_ip }}</td>
                                 <td>{{ survey.end_ip }}</td>

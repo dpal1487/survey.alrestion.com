@@ -39,6 +39,13 @@ if (!function_exists('updateMessage')) {
         return ['success'=>true,'message'=>"$message succesfully updated."];
     }
 }
+
+if (!function_exists('restoreMessage')) {
+    function restoreMessage($message)
+    {
+        return ['success' => true, 'message' => "$message succesfully restore."];
+    }
+}
 if (!function_exists('deleteMessage')) {
     function deleteMessage($message)
     {

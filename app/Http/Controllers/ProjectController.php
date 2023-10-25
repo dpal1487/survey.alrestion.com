@@ -2,31 +2,32 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\ExportIdExport;
-use App\Exports\ProjectReport;
-use App\Http\Resources\ClientListResource;
-use App\Http\Resources\CountryResource;
-use App\Http\Resources\ProjectLinkResource;
-use App\Http\Resources\ProjectResource;
-use App\Http\Resources\ProjectListResource;
-use App\Http\Resources\ProjectStatusResource;
-use App\Http\Resources\SupplierListResource;
-use App\Http\Resources\SupplierProjectResource;
-use App\Imports\IdImport;
+use Inertia\Inertia;
 use App\Models\Client;
-use App\Models\CloseProject;
 use App\Models\Country;
 use App\Models\Project;
-use App\Models\ProjectLink;
-use App\Models\ProjectStatus;
-use App\Models\Respondent;
 use App\Models\Supplier;
-use App\Models\SupplierProject;
-use Haruncpi\LaravelIdGenerator\IdGenerator;
+use App\Imports\IdImport;
+use App\Models\Respondent;
+use App\Models\ProjectLink;
+use App\Models\CloseProject;
 use Illuminate\Http\Request;
+use App\Models\ProjectStatus;
+use App\Exports\ProjectReport;
+use App\Exports\ExportIdExport;
+use App\Models\CloseRespondent;
+use App\Models\SupplierProject;
 use Illuminate\Support\Facades\Auth;
-use Inertia\Inertia;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Resources\CountryResource;
+use App\Http\Resources\ProjectResource;
+use App\Http\Resources\ClientListResource;
+use App\Http\Resources\ProjectLinkResource;
+use App\Http\Resources\ProjectListResource;
+use App\Http\Resources\SupplierListResource;
+use Haruncpi\LaravelIdGenerator\IdGenerator;
+use App\Http\Resources\ProjectStatusResource;
+use App\Http\Resources\SupplierProjectResource;
 
 class ProjectController extends Controller
 {
@@ -42,7 +43,7 @@ class ProjectController extends Controller
 
     public function index(Request $request)
     {
-        $projects = Project::orderBy('updated_at', 'desc');
+        $projects = Project::orderBy('updated_at', 'desc')->where('status', '!=', 'close');
         if (Auth::user()->role->role->slug == 'user') {
             $projects = $projects->where(['status' => 'live']);
         }
@@ -138,10 +139,12 @@ class ProjectController extends Controller
 
         $projectLinks = ProjectLink::where('project_id', $project->id)->get();
         $id = IdGenerator::generate(['table' => 'projects', 'field' => 'project_id', 'length' => 10, 'prefix' => 'ARS' . date('ym')]);
+        $autoNumber =  time();
+        $clone = $autoNumber % 10;
         if ($project) {
             if ($project = Project::create([
                 'project_id' => $id,
-                'project_name' => $project->project_name . " Clone",
+                'project_name' => $project->project_name . ' Clone -' . $clone,
                 'client_id' => $project->client_id,
                 'user_id' => Auth::user()->id,
                 'start_date' => $project->start_date,
@@ -168,10 +171,10 @@ class ProjectController extends Controller
                         'status' => $projectlink->status,
                     ]);
                 }
-                return redirect("/project/$project->id")->with('flash', createMessage('Project'));
             }
-            return redirect()->back()->withErrors(errorMessage());
+            return response()->json(createMessage('Project Clone'));
         }
+        return redirect()->back()->withErrors(errorMessage());
     }
     public function show(Request $request, $id)
     {
@@ -245,28 +248,34 @@ class ProjectController extends Controller
     public function status(Request $request)
     {
         if ($request->status == 'close') {
-            $projects = Respondent::where('project_id', '=', $request->id)->get();
-            foreach ($projects as $project) {
-                $closeProject = CloseProject::create([
-                    'client_browser' => $project->client_browser,
-                    'device' => $project->device,
-                    'end_ip' => $project->end_ip,
-                    'id' => $project->id,
-                    'project_id' => $project->project_id,
-                    'project_link_id' => $project->project_link_id,
-                    'starting_ip' => $project->starting_ip,
-                    'status' => $project->status,
-                    'supplier_id' => $project->supplier_id,
-                    'supplier_project_id' => $project->supplier_project_id,
-                    'user_id' => $project->user_id,
-                ]);
+            $respondents = Respondent::where('project_id', '=', $request->id)->get();
+            if (count($respondents) > 0) {
+                foreach ($respondents as $respondent) {
+                    $create =  CloseRespondent::create([
+                        'client_browser' => $respondent->client_browser,
+                        'device' => $respondent->device,
+                        'end_ip' => $respondent->end_ip,
+                        'id' => $respondent->id,
+                        'project_id' => $respondent->project_id,
+                        'project_link_id' => $respondent->project_link_id,
+                        'starting_ip' => $respondent->starting_ip,
+                        'status' => $respondent->status,
+                        'supplier_id' => $respondent->supplier_id,
+                        'supplier_project_id' => $respondent->supplier_project_id,
+                        'user_id' => $respondent->user_id,
+                    ]);
+                }
+                $respondents = Respondent::where('project_id', '=', $request->id)->delete();
             }
-            $projects = Respondent::where('project_id', '=', $request->id)->delete();
+            if (Project::where(['id' => $request->id])->update(['status' => $request->status])) {
+                return response()->json(updateMessage('Project status'));
+            }
+        } else {
+            if (Project::where(['id' => $request->id])->update(['status' => $request->status])) {
+                return response()->json(updateMessage('Project status'));
+            }
+            return response()->json(errorMessage());
         }
-        if (Project::where(['id' => $request->id])->update(['status' => $request->status])) {
-            return response()->json(updateMessage('Project status'));
-        }
-        return response()->json(errorMessage());
     }
     public function suppliers(Request $request, $id)
     {

@@ -46,40 +46,39 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::get('account/export', 'exportReport')->name('account.report');
     });
     // Route::group(['middleware' => ['role:pm,admin,user']], function () {
-        Route::controller(ProjectController::class)->group(function () {
+    Route::controller(ProjectController::class)->group(function () {
 
-            Route::get('/projects', 'index')->name('projects');
+        Route::get('/projects', 'index')->name('projects');
 
-            Route::get('project/create', 'create')->name('project.create');
+        Route::get('project/create', 'create')->name('project.create');
 
-            Route::post('project/store', 'store')->name('project.store');
+        Route::post('project/store', 'store')->name('project.store');
 
-            Route::get('/project/{id}',  'show')->name('project.show');
+        Route::get('/project/{id}',  'show')->name('project.show');
 
-            Route::get('project/{id}/edit', 'edit')->name('project.edit');
-            // Route::get('project/{id}/edit/{action}', 'edit')->name('project.edit');
-            Route::post('project/{id}/update', 'update')->name('project.update');
-            //Project Suppliers 
-            Route::get('project/{id}/suppliers', 'suppliers')->name('project.suppliers');
+        Route::get('project/{id}/edit', 'edit')->name('project.edit');
+        // Route::get('project/{id}/edit/{action}', 'edit')->name('project.edit');
+        Route::post('project/{id}/update', 'update')->name('project.update');
+        //Project Suppliers 
+        Route::get('project/{id}/suppliers', 'suppliers')->name('project.suppliers');
 
-            Route::delete('project/{id}', 'destroy')->name('project.destroy');
+        Route::delete('project/{id}', 'destroy')->name('project.destroy');
 
-            Route::post('project/status', 'status')->name('project.status');
+        Route::post('project/status', 'status')->name('project.status');
 
-            Route::post('project/close-delete', 'closeDelete')->name('project.close-delete');
 
-            // Clone Project 
-            Route::post('project/clone', 'projectClone')->name('project.clone');
+        // Clone Project 
+        Route::post('project/clone', 'projectClone')->name('project.clone');
 
-            Route::delete('project/{id}/removeid', 'removeIds')->name('project.removeid');
+        Route::delete('project/{id}/removeid', 'removeIds')->name('project.removeid');
 
-            //Excel Export import
-            Route::post('project/{id}/importid', 'importId')->name('project.importid');
+        //Excel Export import
+        Route::post('project/{id}/importid', 'importId')->name('project.importid');
 
-            Route::get('project/{id}/export', 'exportId')->name('project.export');
+        Route::get('project/{id}/export', 'exportId')->name('project.export');
 
-            Route::get('project/{id}/report', 'report')->name('project.report');
-        });
+        Route::get('project/{id}/report', 'report')->name('project.report');
+    });
     // });
 
 
@@ -113,7 +112,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
             Route::get('mapping/{id}/suppliers', 'suppliers')->name('mapping.suppliers');
             Route::get('project-link/{id}/suppliers', 'projectLinkSuppliers')->name('project-link.suppliers');
 
-            
+
 
             Route::get('mapping/{id}/edit', 'edit')->name('mapping.edit');
             Route::post('mapping/{id}/update', 'update')->name('mapping.update');
@@ -196,8 +195,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
 
             Route::post('close-project/restore', 'restore')->name('close-project.restore');
 
-            Route::post('close-project/close-delete', 'closeDelete')->name('close-project.close-delete');
-
+            Route::delete('close-project/destroy/{id}', 'destroy')->name('close-project.destroy');
         });
     });
 
@@ -233,6 +231,3 @@ Route::group(['prefix' => 'survey'], function () {
 Route::group(['prefix' => 'redirect'], function () {
     Route::get('{slug}', [RedirectController::class, 'surveyEnd']);
 });
-
-
-

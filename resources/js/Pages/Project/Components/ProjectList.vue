@@ -81,7 +81,7 @@ export default defineComponent({
                     </div>
                     <Multiselect v-else :canClear="false" :value="project.status" :options="status"
                         class="btn btn-sm btn-light px-0 py-0 mw-200px" label="label" valueProp="value" @input="
-                            updateStatus(project.id, $event)
+                            updateStatus(project.id, $event, index)
                             " placeholder="Select Status" />
                 </div>
                 <!--begin:Action-->

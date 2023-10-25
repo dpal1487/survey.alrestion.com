@@ -136,12 +136,18 @@ export default defineComponent({
         <div class="separator separator-dashed my-4"></div>
         <ul class="nav d-flex justify-content-between fw-bold text-center">
             <!--begin::Item-->
+
             <li class="nav-item row">
-                <input type="text"
-                    :class="`form-control w-100px mx-auto p-0 text-gray-900 text-center fw-bold ${isReadonly && 'border-0'}`"
-                    @dblclick="changeSampleSize()" :readonly="isReadonly" :value="project.sample_size"
-                    @keydown="(e) => handelKeyDown(project.id, e, project?.project_id, index)" @blur="handelBlur()"
-                    title="Double click to edit" />
+                <span v-if="$page.props.user.role.role.slug != 'user'">
+                    <input type="text"
+                        :class="`form-control w-100px mx-auto p-0 text-gray-900 text-center fw-bold ${isReadonly && 'border-0'}`"
+                        @dblclick="changeSampleSize()" :readonly="isReadonly" :value="project.sample_size"
+                        @keydown="(e) => handelKeyDown(project.id, e, project?.project_id, index)" @blur="handelBlur()"
+                        title="Double click to edit" />
+                </span>
+                <span v-else>
+                    {{ project.sample_size }}
+                </span>
                 <span class="text-gray-400">Sample Size</span>
             </li>
             <!--end::Item-->

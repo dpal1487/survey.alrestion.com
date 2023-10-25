@@ -105,14 +105,14 @@ export default {
                 toast.error(error.message)
             });
     },
-
-    async restoreProject(route, params) {
+    async restoreProject(route, params, data, index) {
         await axios
             .post(route, params)
             .then((response) => {
                 if (response.data.success) {
                     toast.success(response.data.message)
-                    Inertia.get('close-projects');
+                    data.splice(index, 1),
+                        Inertia.get('close-projects');
                 } else {
                     toast.error(response.data.message)
                 }
@@ -127,7 +127,7 @@ export default {
             .then((response) => {
                 if (response.data.success) {
                     toast.success(response.data.message)
-                    window.location.reload();
+                    Inertia.get('projects');
                 } else {
                     toast.error(response.data.message)
                 }

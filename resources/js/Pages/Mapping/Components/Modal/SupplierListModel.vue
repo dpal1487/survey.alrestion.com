@@ -64,13 +64,11 @@ export default defineComponent({
             <div class="border rounded-3 p-5 mb-3 shadow-sm" v-else-if="projects?.length > 0"
                 v-for="(project, index) in projects" :key="index">
                 <div class="d-flex justify-content-between align-items-center">
-
                     <div class="flex-1">
                         <Link class="text-gray-800 text-hover-primary fs-6 fw-bold" :href="`/mapping/${project.id}`">
                         {{ project.supplier?.supplier_name }} ({{
                             project.supplier?.display_name
                         }})</Link>
-
                         <span class="text-muted fw-semibold d-block fs-7"><i class="bi bi-people-fill me-2"></i>{{
                             project?.project_name }} ({{
         project?.country?.iso2

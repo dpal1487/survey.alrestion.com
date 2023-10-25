@@ -21,16 +21,11 @@ export default defineComponent({
         Loading,
     },
     methods: {
-        async updateStatus(id, e) {
-            this.isLoading = true;
-            await utils.changeStatus(route('project.status'), { id: id, status: e });
-            this.isLoading = false;
-        },
         async confirmDelete(index) {
-            await utils.deleteIndexDialog(route('project.destroy', this.projects[index].id), this.projects, index);
+            await utils.deleteIndexDialog(route('close-project.destroy', this.projects[index].id), this.projects, index);
         },
-        async restoreProject(id) {
-            await utils.restoreProject(route('close-project.restore'), { id: id });
+        async restoreProject(id, index) {
+            await utils.restoreProject(route('close-project.restore'), { id: id }, this.projects, index);
         }
     },
 });
@@ -41,8 +36,8 @@ export default defineComponent({
         <div class="card-body">
             <div class="d-flex align-items-center justify-content-between">
                 <div class="col-2">
-                    <span class="text-gray-800 text-hover-primary fs-6 fw-bold">{{
-                        project?.project_name }}</span>
+                    <Link class="text-gray-800 text-hover-primary fs-6 fw-bold" href="#">{{
+                        project?.project_name }}</Link>
                     <span class="text-muted fw-semibold d-block fs-7">{{
                         project?.project_id }}</span>
                 </div>
@@ -65,7 +60,7 @@ export default defineComponent({
                     </span>
                 </div>
                 <div class="col-2 fw-bold" v-if="$page.props.user.role.role.slug != 'user'">
-                    <Link :href="`client/${project.client?.id}`" :title="project?.client?.name">
+                    <Link href="" :title="project?.client?.name">
                     <span><i class="bi bi-people me-2"></i>{{ project?.client?.display_name }}</span>
                     </Link>
                 </div>
@@ -87,7 +82,6 @@ export default defineComponent({
                     </button>
                     <div class="text-left dropdown-menu menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
                         :aria-labelled:by="`dropdown-${project.id}`">
-
                         <div class="menu-item px-3">
                             <span @click="restoreProject(project.id)" class="menu-link"><i
                                     class="bi bi-file-plus fs-5 me-2"></i>Restore</span>

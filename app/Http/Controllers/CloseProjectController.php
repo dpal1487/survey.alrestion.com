@@ -7,6 +7,8 @@ use App\Http\Resources\CloseProjectListResource;
 use App\Http\Resources\ProjectStatusResource;
 use App\Models\Client;
 use App\Models\CloseProject;
+use App\Models\CloseRespondent;
+use App\Models\Project;
 use App\Models\ProjectStatus;
 use App\Models\Respondent;
 use Illuminate\Http\Request;
@@ -25,7 +27,7 @@ class CloseProjectController extends Controller
 
     public function index(Request $request)
     {
-        $projects = CloseProject::orderBy('updated_at', 'desc')->groupBy('project_id');
+        $projects = Project::orderBy('updated_at', 'desc')->groupBy('project_id')->where('status', 'close');
         if (Auth::user()->role->role->slug == 'user') {
             $projects = $projects->where(['status' => 'live']);
         }
@@ -48,30 +50,41 @@ class CloseProjectController extends Controller
     }
     public function restore(Request $request)
     {
-
-        $projects = CloseProject::where('project_id', '=', $request->id)->get();
-
-        foreach ($projects as $project) {
-            $closeProject = Respondent::create([
-                'client_browser' => $project->client_browser,
-                'device' => $project->device,
-                'end_ip' => $project->end_ip,
-                'id' => $project->id,
-                'project_id' => $project->project_id,
-                'project_link_id' => $project->project_link_id,
-                'starting_ip' => $project->starting_ip,
-                'status' => $project->status,
-                'supplier_id' => $project->supplier_id,
-                'supplier_project_id' => $project->supplier_project_id,
-                'user_id' => $project->user_id,
-            ]);
+        $project = Project::where('id', '=', $request->id)->first();
+        if ($project) {
+            //project update close to archived project
+            $project->update(['status' => 'archived']);
+            
+            $respondents = CloseRespondent::where('project_id', '=', $request->id)->get();
+            if (count($respondents) > 0) {
+                foreach ($respondents as $respondent) {
+                    Respondent::create([
+                        'client_browser' => $respondent->client_browser,
+                        'device' => $respondent->device,
+                        'end_ip' => $respondent->end_ip,
+                        'id' => $respondent->id,
+                        'project_id' => $project->id,
+                        'project_link_id' => $respondent->project_link_id,
+                        'starting_ip' => $respondent->starting_ip,
+                        'status' => $respondent->status,
+                        'supplier_id' => $respondent->supplier_id,
+                        'supplier_project_id' => $respondent->supplier_project_id,
+                        'user_id' => $respondent->user_id,
+                    ]);
+                }
+                $respondents = CloseRespondent::where('project_id', '=', $request->id)->delete();
+            }
+            return response()->json(restoreMessage('Project'));
         }
+        return response()->json(errorMessage());
+    }
 
-        $project->delete();
-        return Inertia::render('CloseProject/Index', [
-            'projects' => CloseProjectListResource::collection($projects),
-            'status' => ProjectStatusResource::collection($this->status),
-            'clients' => $this->clients,
-        ]);
+    public function destroy($id)
+    {
+        if (Project::where('id', $id)->delete()) {
+            CloseRespondent::where('project_id', $id)->delete();
+            return response()->json(deleteMessage('Close Project'));
+        }
+        return response()->json(errorMessage());
     }
 }
