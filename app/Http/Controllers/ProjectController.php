@@ -180,7 +180,6 @@ class ProjectController extends Controller
     {
         $project = Project::find($id);
         $links = ProjectLink::where('project_id', $id);
-
         if (!empty($request->q)) {
             $links = $links->where('project_name', 'like', "%{$request->q}%");
         }

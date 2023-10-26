@@ -10,7 +10,7 @@ import 'vue-loading-overlay/dist/css/index.css';
 import { Inertia } from "@inertiajs/inertia";
 
 export default defineComponent({
-    props: ["project", "project_links", "clients", "status"],
+    props: ["project", "project_links", "clients", "status", 'suppliers'],
     data() {
         return {
             title: "Project Overview",
