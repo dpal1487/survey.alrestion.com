@@ -30,7 +30,10 @@ export default defineComponent({
             await utils.deleteIndexDialog(route('project.destroy', this.projects[index].id), this.projects, index);
         },
         async cloneProject(id) {
+            this.isLoading = true;
             await utils.cloneProject(route('project.clone'), { id: id });
+            this.isLoading = false;
+
         }
     },
     created() { },

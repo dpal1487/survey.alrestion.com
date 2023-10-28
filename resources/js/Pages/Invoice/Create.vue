@@ -271,6 +271,7 @@ export default defineComponent({
                                                             v-model="item.cpi" :placeholder="`${form.currency.symbol}0.00`"
                                                             @keyup="handler()" />
                                                     </td>
+                                                    
                                                     <td class="ps-0">
                                                         <input class="form-control form-control-solid" type="number"
                                                             v-model="item.quantity" placeholder="1" @keyup="handler()" />

@@ -129,10 +129,12 @@ export default {
                     toast.success(response.data.message)
                     Inertia.get('projects');
                 } else {
+                    console.log("error", response.data.message)
                     toast.error(response.data.message)
                 }
             })
             .catch(function (error) {
+                console.log("sd", error.message)
                 toast.error(error.message)
             });
     },

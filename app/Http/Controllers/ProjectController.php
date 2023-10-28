@@ -135,6 +135,27 @@ class ProjectController extends Controller
 
     public function projectClone(Request $request)
     {
+        $autoNumber =  time();
+        $number = $autoNumber % 10;
+        function extractBaseAndNumber($inputString)
+        {
+
+            $autoNumber =  time();
+            $number = $autoNumber % 10;
+            $pattern = '/^(.+) clone-(\d+)$/';
+            if (preg_match($pattern, $inputString, $matches)) {
+                return [
+                    "base" => $matches[1],
+                    "number" => $number
+                ];
+            } else {
+                return [
+                    "base" => $inputString,
+                    "number" => 1
+                ];
+            }
+        }
+
         $project = Project::where('id', $request->id)->first();
 
         $projectLinks = ProjectLink::where('project_id', $project->id)->get();
@@ -144,7 +165,9 @@ class ProjectController extends Controller
         if ($project) {
             if ($project = Project::create([
                 'project_id' => $id,
-                'project_name' => $project->project_name . ' Clone -' . $clone,
+                // 'project_name' => $project->project_name . ' Clone -' . $clone,
+                'project_name' => extractBaseAndNumber($project->project_name)["base"] . " clone-" . (extractBaseAndNumber($project->project_name)["number"] + $number),
+
                 'client_id' => $project->client_id,
                 'user_id' => Auth::user()->id,
                 'start_date' => $project->start_date,
@@ -322,8 +345,5 @@ class ProjectController extends Controller
         if ($project) {
             return Excel::download(new ProjectReport($id), $project->project_name . '.xlsx');
         }
-    }
-    public function cloneProject($id)
-    {
     }
 }

@@ -32,8 +32,7 @@
     @env('local')
     @endenv
     <script>
-        window._asset = '{{ asset('
-        ') }}';
+        window._asset = '{{asset(" / ")}}';
     </script>
 </body>
 
