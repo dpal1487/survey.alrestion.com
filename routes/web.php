@@ -57,7 +57,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::get('/project/{id}',  'show')->name('project.show');
 
         Route::get('project/{id}/edit', 'edit')->name('project.edit');
-        // Route::get('project/{id}/edit/{action}', 'edit')->name('project.edit');
+
         Route::post('project/{id}/update', 'update')->name('project.update');
         //Project Suppliers 
         Route::get('project/{id}/suppliers', 'suppliers')->name('project.suppliers');

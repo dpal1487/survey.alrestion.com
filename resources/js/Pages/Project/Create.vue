@@ -152,12 +152,14 @@ export default defineComponent({
             let segments = path.split("/");
             return segments[numberSegment];
         },
-
-
-
     },
     created() {
     },
+    computed: {
+        customDateFormat() {
+            return 'MM/dd/yyyy';
+        }
+    }
 });
 </script>
 <template>

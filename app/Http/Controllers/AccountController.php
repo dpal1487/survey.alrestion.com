@@ -36,7 +36,6 @@ class AccountController extends Controller
     public function update(Request $request)
     {
         $user = Auth::user();
-
         if ($user->id != 1) {
             $validator = Validator::make($request->all(), [
                 'first_name' => 'required|string',

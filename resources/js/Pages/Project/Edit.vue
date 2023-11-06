@@ -118,12 +118,14 @@ export default defineComponent({
             let segments = path.split("/");
             return segments[numberSegment];
         },
-        customFormatter(date) {
-            return moment(date).format('YYYY-MM-DD');
-        }
     },
     created() {
     },
+    computed: {
+        customDateFormat() {
+            return 'MM/dd/yyyy';
+        }
+    }
 });
 </script>
 <template>
@@ -304,8 +306,16 @@ export default defineComponent({
                             <div class="col-6">
                                 <div class="fv-row fs-5">
                                     <jet-label for="project-start" value="Project Start Date" />
-                                    <Datepicker v-model="v$.form.start_date.$model" id="project-start"
-                                        :format="customFormatter" class="form-control form-control-lg form-control-solid"
+                                    <!-- <Datepicker v-model="v$.form.start_date.$model" id="project-start"
+                                        :format="customDateFormat" :inputFormat="customDateFormat"
+                                        class="form-control form-control-lg form-control-solid"
+                                        placeholder="Enter project start date" :class="v$.form.start_date.$errors.length > 0
+                                            ? 'is-invalid'
+                                            : ''
+                                            " /> -->
+
+                                    <input type="date" v-model="v$.form.start_date.$model" id="project-end"
+                                        :format="customDateFormat" class="form-control form-control-lg form-control-solid"
                                         placeholder="Enter project start date" :class="v$.form.start_date.$errors.length > 0
                                             ? 'is-invalid'
                                             : ''
@@ -320,8 +330,16 @@ export default defineComponent({
                             <div class="col-6">
                                 <div class="fv-row fs-5">
                                     <jet-label for="project-end" value="Project End Date" />
-                                    <Datepicker v-model="v$.form.end_date.$model" id="project-end" type="text"
+                                    <!-- <Datepicker v-model="v$.form.end_date.$model" id="project-end" type="text"
+                                        :format="customDateFormat" :inputFormat="customDateFormat"
                                         class="form-control form-control-lg form-control-solid"
+                                        placeholder="Enter project start date" :class="v$.form.end_date.$errors.length > 0
+                                            ? 'is-invalid'
+                                            : ''
+                                            " /> -->
+
+                                    <input type="date" v-model="v$.form.end_date.$model" id="project-end"
+                                        :format="customDateFormat" class="form-control form-control-lg form-control-solid"
                                         placeholder="Enter project start date" :class="v$.form.end_date.$errors.length > 0
                                             ? 'is-invalid'
                                             : ''

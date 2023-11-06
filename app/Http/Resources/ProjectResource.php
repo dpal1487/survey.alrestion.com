@@ -20,7 +20,7 @@ class ProjectResource extends JsonResource
             'user' => $this->user?->first_name . ' ' . $this->user?->last_name,
             'device_type' => $this->device_type,
             'project_type' => $this->project_type,
-            'start_date' =>  date('m/d/Y', strtotime($this->start_date)),
+            'start_date' =>  $this->start_date,
             'end_date' => date('m/d/Y', strtotime($this->end_date)),
             'target' => $this->target,
             'country' => new CountryResource($this->country),

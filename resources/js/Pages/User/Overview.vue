@@ -93,16 +93,16 @@ export default defineComponent({
                 this.form.transform((data) => ({
                     ...data,
                 }))
-                    .post(this.route("user.update", this.form.id),                        {
-                            onSuccess: (data) => {
-                                toast.success(this.$page.props.jetstream.flash.message);
-                                this.isEdit = false;
-                            },
-                            onError: (data) => {
-                                console.log(data);
-                                // toast.error(data.message)
-                            },
-                        });
+                    .post(this.route("user.update", this.form.id), {
+                        onSuccess: (data) => {
+                            toast.success(this.$page.props.jetstream.flash.message);
+                            this.isEdit = false;
+                        },
+                        onError: (data) => {
+                            console.log(data);
+                            // toast.error(data.message)
+                        },
+                    });
             }
         },
     },
@@ -277,7 +277,7 @@ export default defineComponent({
                             <!--begin::Label-->
                             <label class="col-6 fw-bold fs-5 text-gray-800">Email</label>
                             <!--end::Label-->
-                            
+
                             <!--begin::Col-->
                             <div class="col-lg-6 fv-row">
                                 <span class="fw-semibold text-gray-800 fs-6">{{ this.user?.data?.email }}

@@ -17,6 +17,12 @@ export default defineComponent({
             isLoading: false,
             fullPage: true,
             title: "Projects",
+            selectedSortById: null,
+            selectedSortByName:null,
+            order_by: [
+                { label: 'asc', value: 'asc', },
+                { label: 'desc', value: 'desc', }
+            ],
         };
     },
     components: {
@@ -37,6 +43,12 @@ export default defineComponent({
                 },
             });
         },
+        filterData() {
+            console.log("see this",this.selectedSortById)
+            this.isLoading = true;
+            Inertia.get(route('projects', { order_by: this.projectId }));
+        },
+
     },
     created() { },
 });
@@ -57,8 +69,9 @@ export default defineComponent({
                 <i class="bi bi-plus-circle"></i>Add New Project</Link>
             </div>
         </template>
-        <div class="card card-flush">
-            <form @submit.prevent="search" class="card-header justify-content-start py-4 px-4 gap-2 gap-md-5">
+        <div class="card card-flush justify-content-between">
+            <form @submit.prevent="search"
+                class="card-header  justify-content-start py-4 px-4 gap-2 gap-md-5">
                 <div class="d-flex align-items-center position-relative">
                     <span class="svg-icon svg-icon-1 position-absolute ms-4"><svg width="24" height="24" viewBox="0 0 24 24"
                             fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -80,8 +93,25 @@ export default defineComponent({
                     <Multiselect :can-clear="false" :options="clients.data" label="display_name" valueProp="id"
                         class="btn btn-sm btn-light py-2" placeholder="Select Client" v-model="form.client" />
                 </div>
+                <div class="w-100 mw-200px">
+                    <Multiselect :can-clear="false" :options="order_by" label="label" valueProp="value"
+                    class="btn btn-sm btn-light py-2 px-0" placeholder="Project ID" v-model="form.project_id" />
+                </div>
+                <div class="w-100 mw-200px">
+                    <Multiselect :can-clear="false" :options="order_by" label="label" valueProp="value"
+                        class="btn btn-sm btn-light py-2" placeholder="Project Name" v-model="form.project_name" />
+                </div>
                 <button type="submit" class="btn btn-primary">Search</button>
             </form>
+            <!-- <div class="w-100 mw-200px d-flex align-items-center mx-2">
+                <Multiselect :can-clear="false" :options="order_by" label="label" valueProp="value" @chnage="filterData()"
+                    class="btn btn-sm btn-light py-2 px-0" placeholder="Project ID" v-model="selectedSortById" />
+            </div>
+            <div class="w-100 mw-200px d-flex align-items-center mx-5">
+
+                <Multiselect :can-clear="false" :options="order_by" label="label" valueProp="value"
+                    class="btn btn-sm btn-light py-2 px-0" placeholder="Project ID" v-model="selectedSortByName" />
+            </div> -->
         </div>
         <project-list :projects="projects.data" :status="status.data" :action="action" />
         <div class="row" v-if="projects.meta">

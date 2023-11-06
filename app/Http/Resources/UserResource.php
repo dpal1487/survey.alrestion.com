@@ -16,17 +16,17 @@ class UserResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'full_name' => $this->first_name.' '.$this->last_name,
+            'full_name' => $this->first_name . ' ' . $this->last_name,
             'first_name' => $this->first_name,
             'last_name' => $this->last_name,
             'email' => $this->email,
-            'date_of_birth' => $this->date_of_birth,
-            'gender' =>ucfirst( $this->gender),
+            'date_of_birth' => date('m/d/Y', strtotime($this->date_of_birth)),
+            'gender' => ucfirst($this->gender),
             'status' => $this->status,
             'role' => $this->role?->role,
-            'header' =>[
+            'header' => [
                 'total_project' => count($this->projects),
-                'complete' => count($this->projects->where('status','complete')),
+                'complete' => count($this->projects->where('status', 'complete')),
                 'terminate' => count($this->projects->where('status', 'terminate')),
                 'quotafull' => count($this->projects->where('status', 'quotafull'))
             ]

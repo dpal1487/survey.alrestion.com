@@ -43,19 +43,37 @@ class ProjectController extends Controller
 
     public function index(Request $request)
     {
-        $projects = Project::orderBy('updated_at', 'desc')->where('status', '!=', 'close');
-        if (Auth::user()->role->role->slug == 'user') {
-            $projects = $projects->where(['status' => 'live']);
+
+        if (!empty($request->project_id)) {
+            if ($request->project_id == 'asc') {
+                $projects = Project::orderBy('project_id', 'asc');
+            }
+            if ($request->project_id == 'desc') {
+                $projects = Project::orderBy('project_id', 'desc');
+            }
+        } else if (!empty($request->project_name)) {
+            if ($request->project_name == 'asc') {
+                $projects = Project::orderBy('project_name', 'asc');
+            }
+            if ($request->project_name == 'desc') {
+                $projects = Project::orderBy('project_name', 'desc');
+            }
+        } else {
+            $projects = Project::orderBy('updated_at', 'desc')->where('status', '!=', 'close');
+            if (Auth::user()->role->role->slug == 'user') {
+                $projects = $projects->where(['status' => 'live']);
+            }
+            if (!empty($request->q)) {
+                $projects = $projects->where('project_name', 'like', "%{$request->q}%")->orWhere('project_id', 'like', "%{$request->q}%");
+            }
+            if (!empty($request->status)) {
+                $projects = $projects->where('status', $request->status);
+            }
+            if (!empty($request->client)) {
+                $projects = $projects->where('client_id', $request->client);
+            }
         }
-        if (!empty($request->q)) {
-            $projects = $projects->where('project_name', 'like', "%{$request->q}%")->orWhere('project_id', 'like', "%{$request->q}%");
-        }
-        if (!empty($request->status)) {
-            $projects = $projects->where('status', $request->status);
-        }
-        if (!empty($request->client)) {
-            $projects = $projects->where('client_id', $request->client);
-        }
+
         $projects = $projects->paginate(20)->appends(request()->query());
 
         return Inertia::render('Project/Index', [
@@ -78,6 +96,7 @@ class ProjectController extends Controller
     }
     public function store(Request $request)
     {
+
         $id = IdGenerator::generate(['table' => 'projects', 'field' => 'project_id', 'length' => 10, 'prefix' => 'ARS' . date('ym')]);
         $request->validate([
             'project_name' => 'required|unique:projects,project_name',
@@ -99,7 +118,7 @@ class ProjectController extends Controller
         }
         if ($project = Project::create([
             'project_id' => $id,
-            'project_name' => $request->project_name . " Clone",
+            'project_name' => $request->project_name,
             'client_id' => $request->client,
             'user_id' => Auth::user()->id,
             'start_date' => $request->start_date,
@@ -111,7 +130,7 @@ class ProjectController extends Controller
         ])) {
             if (ProjectLink::create([
                 'project_id' => $project->id,
-                'user_id' => Auth::user()->id,
+                // 'user_id' => Auth::user()->id,
                 'cpi' => $request->project_cpi,
                 'project_name' => $request->project_name,
                 'loi' => $request->project_length,
@@ -135,9 +154,7 @@ class ProjectController extends Controller
 
     public function projectClone(Request $request)
     {
-        $autoNumber =  time();
-        $number = $autoNumber % 10;
-        function extractBaseAndNumber($inputString)
+        function randumNumber($inputString)
         {
 
             $autoNumber =  time();
@@ -145,12 +162,12 @@ class ProjectController extends Controller
             $pattern = '/^(.+) clone-(\d+)$/';
             if (preg_match($pattern, $inputString, $matches)) {
                 return [
-                    "base" => $matches[1],
+                    "project_name" => $matches[1],
                     "number" => $number
                 ];
             } else {
                 return [
-                    "base" => $inputString,
+                    "project_name" => $inputString,
                     "number" => 1
                 ];
             }
@@ -166,7 +183,7 @@ class ProjectController extends Controller
             if ($project = Project::create([
                 'project_id' => $id,
                 // 'project_name' => $project->project_name . ' Clone -' . $clone,
-                'project_name' => extractBaseAndNumber($project->project_name)["base"] . " clone-" . (extractBaseAndNumber($project->project_name)["number"] + $number),
+                'project_name' => randumNumber($project->project_name)["project_name"] . " clone-" . (randumNumber($project->project_name)["number"] + 1),
 
                 'client_id' => $project->client_id,
                 'user_id' => Auth::user()->id,
@@ -233,7 +250,6 @@ class ProjectController extends Controller
     }
     public function update(Request $request, $id)
     {
-        // return $request;
         $request->validate([
             'project_name' => 'required',
             'client' => 'required',
@@ -254,6 +270,9 @@ class ProjectController extends Controller
             'target' => $request->target,
             'status' => $request->project_status,
         ])) {
+            if ($request->action == 'project_show') {
+                return redirect('project/' . $id)->with('flash', updateMessage('Project'));
+            }
             return redirect('projects')->with('flash', updateMessage('Project'));
         }
         return redirect()->back()->withErrors(errorMessage());

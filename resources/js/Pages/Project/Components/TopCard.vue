@@ -66,6 +66,8 @@ export default defineComponent({
                     ? JSON.parse(this.project?.device_type)
                     : this.device_type,
                 project_type: this.project?.project_type,
+                action: "project_show",
+
             }),
             devices: [
                 {
@@ -115,14 +117,17 @@ export default defineComponent({
                     this.isLoading = false;
                 })
         },
+
         submit() {
+            const formattedStartDate = this.formatDate(this.form.start_date);
             this.v$.$touch();
             if (!this.v$.form.$invalid) {
                 this.form
                     .transform((data) => ({
                         ...data,
+                        
                     }))
-                    .post(this.route("project.update", this.project.id), {
+                    .post(this.route("project.update", this.project.id,{ start_date: formattedStartDate }), {
                         onSuccess: (data) => {
                             this.isEdit = false;
                             toast.success(
@@ -135,6 +140,13 @@ export default defineComponent({
                     });
             }
         },
+        formatDate(dateString) {
+            console.log(dateString);
+            // Convert a YYYY-MM-DD format date to 'm/d/Y'
+            // const [year, month, day] = dateString.split('/');
+            // return `${month}/${day}/${year}`;
+        },
+
     },
     created() { },
 });
@@ -324,17 +336,17 @@ export default defineComponent({
                                     {{ project.project_name }}
                                 </td>
                             </tr>
-                             <tr>
-                                    <th style="
+                            <tr>
+                                <th style="
                                             white-space: nowrap;
                                             min-width: 150px;
                                         ">
-                                        Status
-                                    </th>
-                                    <td class="fs-6 fw-bold text-gray-800 text-capitalize ">
-                                        {{ project?.status }}
-                                    </td>
-                                </tr>
+                                    Status
+                                </th>
+                                <td class="fs-6 fw-bold text-gray-800 text-capitalize ">
+                                    {{ project?.status }}
+                                </td>
+                            </tr>
                             <tr>
                                 <th style="
                                             white-space: nowrap;

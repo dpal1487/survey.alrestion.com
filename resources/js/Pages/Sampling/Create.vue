@@ -5,7 +5,6 @@ import { Head, Link } from "@inertiajs/inertia-vue3";
 import AppToolbar from "../../Layouts/AppToolbar.vue";
 import SamplingForm from "./Components/SamplingForm.vue";
 import Pagination from "../../Jetstream/Pagination.vue";
-import SupplierList from "./Components/SupplierList.vue";
 import { toast } from "vue3-toastify";
 export default defineComponent({
     props: ["projects", "project", "suppliers"],
@@ -16,7 +15,6 @@ export default defineComponent({
         Head,
         SamplingForm,
         Pagination,
-        SupplierList,
     },
     data() {
         return {

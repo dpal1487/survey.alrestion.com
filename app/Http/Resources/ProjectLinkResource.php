@@ -33,7 +33,7 @@ class ProjectLinkResource extends JsonResource
             'target' => $this->target,
             'status' => $this->status,
             'client' => $this->project->client,
-            'supplier_count' => count($this->suppliers),
+            'supplier_count' => $this->suppliers ?  count($this->suppliers) : 0,
             'created_at' => date('d/M/y - H:m:s A', strtotime($this->created_at)),
             'reports' => [
                 'total_clicks' => count($this->total),

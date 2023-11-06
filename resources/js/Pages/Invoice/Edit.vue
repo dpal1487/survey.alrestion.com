@@ -10,8 +10,6 @@ import JetValidationErrors from "@/Jetstream/ValidationErrors.vue";
 
 import useVuelidate from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
-import VueDatePicker from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css'
 import axios from 'axios';
 import { toast } from "vue3-toastify";
 import Loading from "vue-loading-overlay";
@@ -99,7 +97,6 @@ export default defineComponent({
         JetInput,
         JetLabel,
         InputError,
-        VueDatePicker,
         Loading,
         JetValidationErrors
     },
