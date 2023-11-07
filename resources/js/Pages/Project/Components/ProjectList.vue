@@ -23,7 +23,7 @@ export default defineComponent({
     methods: {
         async updateStatus(id, e) {
             this.isLoading = true;
-            await utils.changeStatus(route('project.status'), { id: id, status: e });
+            await utils.changeStatus(route('project.status'), { id: id, status: e, page: "project-index", });
             this.isLoading = false;
         },
         async confirmDelete(index) {
@@ -87,7 +87,6 @@ export default defineComponent({
                             updateStatus(project.id, $event, index)
                             " placeholder="Select Status" />
                 </div>
-                <!--begin:Action-->
                 <div class="flex-1 text-end mx-5" v-if="$page.props.user.role.role.slug != 'user'">
                     <button class="btn btn-icon btn-outline btn-light btn-circle me-5" :id="`dropdown-${project.id}`"
                         data-bs-toggle="dropdown">

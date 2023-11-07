@@ -188,6 +188,15 @@ class MappingController extends Controller
         return response()->json(errorMessage());
     }
 
+    public function supplierProjectStatus(Request $request)
+    {
+        if (SupplierProject::where(['id' => $request->id])->update(['status' => $request->status ? 1 : 0])) {
+            $status = $request->status  ? "activate" : "inactivate";
+            return response()->json(statusMessage('Project Link'));
+        }
+        return response()->json(errorMessage());
+    }
+
     public function sampleSize(Request $request)
     {
         if (ProjectLink::where(['id' => $request->id])->update(['sample_size' => $request->sample_size])) {

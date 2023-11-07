@@ -14,7 +14,7 @@
         "davejamesmiller/laravel-breadcrumbs": "^5.3",
         "guzzlehttp/guzzle": "^7.2",
         "haruncpi/laravel-id-generator": "^1.1",
-        "inertiajs/inertia-laravel": "^0.6.3",
+        "inertiajs/inertia-laravel": "^0.6.11",
         "intervention/image": "^2.7",
         "laravel/cashier": "^14.12",
         "laravel/framework": "^9.19",

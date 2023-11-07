@@ -6,10 +6,11 @@ import "vue-loading-overlay/dist/css/index.css";
 import { toast } from "vue3-toastify";
 import { copyText } from "vue3-clipboard";
 import Modal from '@/Components/Modal.vue';
-import utils from "../../../../utils";
 import axios from "axios";
 import SectionLoader from "../../../../Components/SectionLoader.vue";
 import CopyLinkButton from "../../../../Components/CopyLinkButton.vue";
+import utils from "../../../../utils";
+import { Inertia } from "@inertiajs/inertia";
 export default defineComponent({
     props: ["id", "show"],
     setup() {
@@ -54,6 +55,21 @@ export default defineComponent({
                 this.isLoading = false;
             }
         }
+    },
+    methods: {
+        async updateStatus(id, e) {
+            this.isLoading = true;
+            await utils.changeStatus(route("supplier.status"), {
+                id: id,
+                status: e,
+            });
+            this.isLoading = false;
+        },
+
+        sapmlingEdit(id) {
+            this.isLoading = true;
+            Inertia.get(route("sampling.edit", id))
+        }
     }
 });
 </script>
@@ -88,13 +104,12 @@ export default defineComponent({
                     </div>
                     <div class="flex-1 text-end" v-if="$page.props.user.role.role.slug != 'user'">
                         <div class="form-switch form-check-solid d-block form-check-custom form-check-success">
-                            <input class="form-check-input h-20px w-30px" type="checkbox" @input="
-                                updateStatus(project?.supplier?.id, $event.target.checked)"
+                            <input class="form-check-input h-20px w-30px" type="checkbox"
+                                @input="updateStatus(project?.supplier?.id, $event.target.checked)"
                                 :checked="project?.supplier?.status == 1 ? true : false" />
                             <label class="form-check-label"> Status </label>
                         </div>
                     </div>
-                    <!--begin:Action-->
                     <div class="flex-1 text-end" v-if="$page.props.user.role.role.slug != 'user'">
                         <button class="btn btn-icon btn-outline btn-light btn-circle me-5" :id="`dropdown-${project.id}`"
                             data-bs-toggle="dropdown">
@@ -103,9 +118,11 @@ export default defineComponent({
                         <div class="text-left dropdown-menu menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
                             :aria-labelled:by="`dropdown-${project.id}`">
                             <div class="menu-item px-3">
-                                <Link :href="`/sampling/${project.id}/edit`" class="menu-link"><i
+                                <!-- <Link :href="`/sampling/${project.id}/edit`" class="menu-link"><i
                                     class="bi bi-pencil me-2"></i>Edit
-                                </Link>
+                                </Link> -->
+                                <span @click="sapmlingEdit(project.id)" class="menu-link"><i
+                                        class="bi bi-pencil me-2"></i>Edit</span>
                             </div>
                             <div class="menu-item px-3">
                                 <span @click="confirmDelete(index)" class="menu-link"><i
@@ -113,35 +130,27 @@ export default defineComponent({
                             </div>
                         </div>
                     </div>
-                    <!--end:Action-->
                 </div>
                 <div class="separator separator-dashed my-4"></div>
                 <ul class="nav d-flex justify-content-between fw-bold text-center">
-                    <!--begin::Item-->
                     <li class="nav-item row">
                         <span>
                             {{ project.sample_size }}
                         </span>
                         <span class="text-gray-400">Sample Size</span>
                     </li>
-                    <!--end::Item-->
-                    <!--begin::Item-->
                     <li class="nav-item row">
                         <span>
                             {{ project.reports.total_clicks }}
                         </span>
                         <span class="text-gray-400">Total Clicks</span>
                     </li>
-                    <!--end::Item-->
-                    <!--begin::Item-->
                     <li class="nav-item row">
                         <span>
                             {{ project.reports.complete }}
                         </span>
                         <span class="text-gray-400"> Completes</span>
                     </li>
-                    <!--end::Item-->
-                    <!--begin::Item-->
                     <li class="nav-item row">
                         <span>
                             {{ project.reports.terminate }}

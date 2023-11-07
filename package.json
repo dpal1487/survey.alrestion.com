@@ -5,14 +5,11 @@
         "build": "vite build && vite build --ssr && vite build && vite build --ssr --ssr"
     },
     "devDependencies": {
-        "@inertiajs/inertia": "^0.10.0",
-        "@inertiajs/inertia-vue3": "^0.5.1",
         "@inertiajs/progress": "^0.2.6",
         "@inertiajs/server": "^0.1.0",
         "@popperjs/core": "^2.5.3",
         "@tailwindcss/forms": "^0.5.2",
         "@tailwindcss/typography": "^0.5.2",
-        "@vitejs/plugin-vue": "^4.0.0",
         "@vue/compiler-sfc": "^3.0.5",
         "@vue/server-renderer": "^3.2.31",
         "alpinejs": "^3.2.6",
@@ -26,12 +23,14 @@
         "pusher-js": "^8.0.1",
         "tailwindcss": "^3.1.0",
         "vite": "^4.0.0",
-        "vue": "^3.0.5",
         "vue-loader": "^16.1.2"
     },
     "dependencies": {
         "@codinglabs/laravel-asset": "^1.0.3",
         "@fortawesome/fontawesome-svg-core": "^6.3.0",
+        "@inertiajs/inertia": "^0.11.1",
+        "@inertiajs/inertia-vue3": "^0.6.0",
+        "@vitejs/plugin-vue": "^4.4.0",
         "@vue-stripe/vue-stripe": "^4.5.0",
         "@vueform/multiselect": "^2.5.8",
         "@vuelidate/core": "^2.0.0",
@@ -49,6 +48,7 @@
         "sweetalert2": "^11.4.8",
         "vee-validate": "^3.4.14",
         "vform": "^2.1.2",
+        "vue": "^3.3.8",
         "vue-echo": "^1.0.2",
         "vue-loading-overlay": "6.0",
         "vue-multi-step-form": "^0.1.0",

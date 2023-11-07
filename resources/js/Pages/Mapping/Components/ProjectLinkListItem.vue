@@ -8,7 +8,7 @@ import CopyLinkButton from "../../../Components/CopyLinkButton.vue";
 
 export default defineComponent({
 
-    props: ["project", "index"],
+    props: ["project_link", "index"],
     emits: ['onSupplier', 'onDelete'],
     data() {
         return {
@@ -42,11 +42,11 @@ export default defineComponent({
         },
         async handelKeyDown(id, e, project_id) {
             if (e.key === 'Enter') {
-                this.project.sample_size = e.target.value;
+                this.project_link.sample_size = e.target.value;
                 await utils.changeSampleSizeValue(route("mapping.sample-size"), {
                     id: id,
                     sample_size: e.target.value,
-                    project_id: project_id
+                    project_link_id: project_link_id
                 });
                 this.isReadonly = true;
             }
@@ -59,38 +59,38 @@ export default defineComponent({
     <div class="card-body">
         <div class="d-flex justify-content-between align-items-center">
             <div class="flex-1">
-                <Link class="text-gray-800 text-hover-primary fs-6 fw-bold" :href="`/mapping/${project.id}`"
-                    v-if="$page.props.user.role.role.slug != 'user'">{{ project.project_name }}</Link>
+                <Link class="text-gray-800 text-hover-primary fs-6 fw-bold" :href="`/mapping/${project_link.id}`"
+                    v-if="$page.props.user.role.role.slug != 'user'">{{ project_link.project_name }}</Link>
                 <div class="text-gray-800 fs-6 fw-bold" v-else>
-                    {{ project.project_name }}
+                    {{ project_link.project_name }}
                 </div>
                 <span class="text-muted fw-semibold d-block fs-7"><i class="bi bi-geo-alt-fill me-2"></i>{{
-                    project.country.display_name }}</span>
+                    project_link.country.display_name }}</span>
             </div>
             <div class="flex-1 fw-bold" v-if="$page.props.user.role.role.slug != 'user'">
-                <span>${{ project.cpi }}/-CPI</span>
+                <span>${{ project_link.cpi }}/-CPI</span>
             </div>
             <div class="flex-1 fw-bold" v-if="$page.props.user.role.role.slug != 'user'">
-                <span>{{ project.loi }}Min/LOI</span>
+                <span>{{ project_link.loi }}Min/LOI</span>
             </div>
             <div class="flex-1 fw-bold" v-if="$page.props.user.role.role.slug != 'user'">
-                <span>{{ project.ir }}%/IR</span>
+                <span>{{ project_link.ir }}%/IR</span>
             </div>
 
             <div class="flex-1 fw-bold" v-if="$page.props.user.role.role.slug != 'user'">
-                <span v-if="project?.user"><i class="bi bi-people me-2"></i>{{ project?.user }}</span>
+                <span v-if="project_link?.user"><i class="bi bi-people me-2"></i>{{ project_link?.user }}</span>
                 <span v-else><i class="bi bi-people me-2"></i>Admin</span>
             </div>
             <div class="flex-1 fw-bold" v-if="$page.props.user.role.role.slug != 'user'">
-                <button type="button" class="btn btn-link" @click="$emit('onSupplier', project.id)">Suppliers
-                    ({{ project.supplier_count }})</button>
+                <button type="button" class="btn btn-link" @click="$emit('onSupplier', project_link.id)">Suppliers
+                    ({{ project_link.supplier_count }})</button>
             </div>
             <div class="flex-1">
-                <CopyLinkButton :link="project.project_link" v-if="$page.props.user.role.role.slug != 'user'"
+                <CopyLinkButton :link="project_link.project_link" v-if="$page.props.user.role.role.slug != 'user'"
                     tooltip="Copy project link" />
                 <CopyLinkButton :link="$page.props.ziggy.url +
                     '/survey/init/' +
-                    project.id +
+                    project_link.id +
                     '/' +
                     $page.props.user.id" v-else />
             </div>
@@ -98,29 +98,30 @@ export default defineComponent({
                 <div class="form-switch form-check-solid d-block form-check-custom form-check-success"
                     v-if="$page.props.user.role.role.slug != 'user'">
                     <input class="form-check-input h-20px w-30px" type="checkbox" @input="
-                        updateStatus(project.id, $event.target.checked)
-                        " :checked="project.status == 1 ? true : false" />
+                        updateStatus(project_link.id, $event.target.checked)
+                        " :checked="project_link.status == 1 ? true : false" />
                     <label class="form-check-label"> Status </label>
                 </div>
                 <div v-else>
-                    <span class="badge badge-success" v-if="project.status">Active</span>
+                    <span class="badge badge-success" v-if="project_link.status">Active</span>
                     <span class="badge badge-danger" v-else>Inactive</span>
                 </div>
             </div>
             <!--begin:Action-->
             <div class="flex-1 text-end" v-if="$page.props.user.role.role.slug != 'user'">
-                <button class="btn btn-icon btn-outline btn-light btn-circle me-5" :id="`dropdown-${project.id}`"
+                <button class="btn btn-icon btn-outline btn-light btn-circle me-5" :id="`dropdown-${project_link.id}`"
                     data-bs-toggle="dropdown">
                     <i class="bi bi-three-dots-vertical"></i>
                 </button>
                 <div class="text-left dropdown-menu menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
-                    :aria-labelled:by="`dropdown-${project.id}`">
+                    :aria-labelled:by="`dropdown-${project_link.id}`">
                     <div class="menu-item px-3">
-                        <Link :href="`/mapping/${project.id}/edit`" class="menu-link"><i class="bi bi-pencil me-2"></i>Edit
+                        <Link :href="`/mapping/${project_link.id}/edit`" class="menu-link"><i
+                            class="bi bi-pencil me-2"></i>Edit
                         </Link>
                     </div>
                     <div class="menu-item px-3">
-                        <Link title="Add Supplier" :href="`/sampling/${project.id}/create`" class="menu-link"><i
+                        <Link title="Add Supplier" :href="`/sampling/${project_link.id}/create`" class="menu-link"><i
                             class="bi bi-plus-circle me-2"></i>Add
                         Supplier
                         </Link>
@@ -141,12 +142,12 @@ export default defineComponent({
                 <span v-if="$page.props.user.role.role.slug != 'user'">
                     <input type="text"
                         :class="`form-control w-100px mx-auto p-0 text-gray-900 text-center fw-bold ${isReadonly && 'border-0'}`"
-                        @dblclick="changeSampleSize()" :readonly="isReadonly" :value="project.sample_size"
-                        @keydown="(e) => handelKeyDown(project.id, e, project?.project_id, index)" @blur="handelBlur()"
-                        title="Double click to edit" />
+                        @dblclick="changeSampleSize()" :readonly="isReadonly" :value="project_link.sample_size"
+                        @keydown="(e) => handelKeyDown(project_link.id, e, project_link?.project_id, index)"
+                        @blur="handelBlur()" title="Double click to edit" />
                 </span>
                 <span v-else>
-                    {{ project.sample_size }}
+                    {{ project_link.sample_size }}
                 </span>
                 <span class="text-gray-400">Sample Size</span>
             </li>
@@ -154,7 +155,7 @@ export default defineComponent({
             <!--begin::Item-->
             <li class="nav-item row">
                 <span>
-                    {{ project.reports.total_clicks }}
+                    {{ project_link.reports.total_clicks }}
                 </span>
                 <span class="text-gray-400">Total Clicks</span>
             </li>
@@ -162,7 +163,7 @@ export default defineComponent({
             <!--begin::Item-->
             <li class="nav-item row">
                 <span>
-                    {{ project.reports.complete }}
+                    {{ project_link.reports.complete }}
                 </span>
                 <span class="text-gray-400">Completes</span>
             </li>
@@ -170,31 +171,31 @@ export default defineComponent({
             <!--begin::Item-->
             <li class="nav-item row">
                 <span>
-                    {{ project.reports.terminate }}
+                    {{ project_link.reports.terminate }}
                 </span>
                 <span class="text-gray-400">Terminates</span>
             </li>
             <li class="nav-item row">
                 <span>
-                    {{ project.reports.quotafull }}
+                    {{ project_link.reports.quotafull }}
                 </span>
                 <span class="text-gray-400">Quotafull</span>
             </li>
             <li class="nav-item row">
                 <span>
-                    {{ project.reports.security_terminate }}
+                    {{ project_link.reports.security_terminate }}
                 </span>
                 <span class="text-gray-400">Security Terminates</span>
             </li>
             <li class="nav-item row">
                 <span>
-                    {{ project.reports.incomplete }}
+                    {{ project_link.reports.incomplete }}
                 </span>
                 <span class="text-gray-400">Incompletes</span>
             </li>
             <li class="nav-item row">
                 <span>
-                    {{ project.reports.total_ir }}
+                    {{ project_link.reports.total_ir }}
                 </span>
                 <span class="text-gray-400">Incidence Ratio</span>
             </li>

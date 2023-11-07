@@ -96,7 +96,9 @@ export default {
             .then((response) => {
                 if (response.data.success) {
                     toast.success(response.data.message)
-                    Inertia.get('projects');
+                    if (params.page == 'project-index') {
+                        Inertia.get('projects');
+                    }
                 } else {
                     toast.error(response.data.message)
                 }

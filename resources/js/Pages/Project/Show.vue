@@ -67,10 +67,8 @@ export default defineComponent({
         </template>
         <template #toolbar v-if="$page.props.user.role.role.slug != 'user'">
             <div class="d-flex align-items-center gap-2 gap-lg-3">
-                <!--begin::Primary button-->
                 <Link href="/project/create" class="btn btn-sm fw-bold btn-primary">
                 <i class="bi bi-plus-circle"></i>Add New Project</Link>
-                <!--end::Primary button-->
             </div>
         </template>
         <TopCard :project="project.data" :clients="clients.data" :status="status" />

@@ -77,28 +77,17 @@ const maxWidthClass = computed(() => {
 <template>
     <div :class="`modal fade ${show ? 'show d-block' : 'd-none'}`" tabindex="-1" :aria-hidden="show ? false : true"
         :style="`${show && 'background: rgba(0, 0, 0, 0.3)'}`">
-        <!--begin::Modal header-->
         <div
             :class="` modal-dialog ${isFullscreen ? 'modal-fullscreen' : 'modal-dialog-centered mw-950px modal-dialog'}  `">
-
-            <!--begin::Modal content-->
             <div class="modal-content">
-                <!--begin::Modal header-->
                 <div class="modal-header flex-stack h-60px">
-                    <!--begin::Title-->
                     <h2>{{ title }}</h2>
-                    <!--end::Title-->
                     <div class="d-flex ">
                         <div class="mx-10">
                             <a target="_blank" :href="`/sampling/${id}/create`" class="btn btn-primary btn-sm"><i
-                                class="bi bi-plus-circle"></i>Add New Link</a>
-                            <!-- 
-                            <Link href="/project/create" class="btn btn-sm fw-bold btn-primary">
-                            <i class="bi bi-plus-circle"></i>Add New Project</Link> -->
+                                class="bi bi-plus-circle"></i>Add New Supplier</a>
                         </div>
-                        <!--begin::Close-->
                         <button type="button" @click="$emit('onhide')" class="btn btn-sm btn-icon btn-active-color-primary">
-                            <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
                             <span class="svg-icon svg-icon-1">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                     xmlns="http://www.w3.org/2000/svg">
@@ -108,15 +97,9 @@ const maxWidthClass = computed(() => {
                                         fill="currentColor" />
                                 </svg>
                             </span>
-                            <!--end::Svg Icon-->
                         </button>
-                        <!--end::Close-->
                     </div>
-
                 </div>
-
-                <!--begin::Modal header-->
-                <!--begin::Modal body-->
                 <div class="modal-body scroll-y position-relative" style="min-height: 400px;">
                     <slot v-if="show" />
                 </div>

@@ -43,7 +43,6 @@ class ProjectController extends Controller
 
     public function index(Request $request)
     {
-
         if (!empty($request->project_id)) {
             if ($request->project_id == 'asc') {
                 $projects = Project::orderBy('project_id', 'asc');
@@ -130,7 +129,7 @@ class ProjectController extends Controller
         ])) {
             if (ProjectLink::create([
                 'project_id' => $project->id,
-                // 'user_id' => Auth::user()->id,
+                'user_id' => Auth::user()->id,
                 'cpi' => $request->project_cpi,
                 'project_name' => $request->project_name,
                 'loi' => $request->project_length,
@@ -156,7 +155,6 @@ class ProjectController extends Controller
     {
         function randumNumber($inputString)
         {
-
             $autoNumber =  time();
             $number = $autoNumber % 10;
             $pattern = '/^(.+) clone-(\d+)$/';
@@ -168,7 +166,7 @@ class ProjectController extends Controller
             } else {
                 return [
                     "project_name" => $inputString,
-                    "number" => 1
+                    "number" => $number
                 ];
             }
         }
