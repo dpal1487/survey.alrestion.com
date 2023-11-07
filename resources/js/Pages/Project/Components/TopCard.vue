@@ -248,6 +248,7 @@ export default defineComponent({
                             </div>
                             <div class="fv-row col-md-6 fs-5">
                                 <jet-label for="project-end" value="Project End Date" />
+                                {{ form.end_date }}
                                 <input type="date" v-model="v$.form.end_date.$model"
                                     class="form-control form-control-lg form-control-solid"
                                     placeholder="Enter project start date" :class="v$.form.end_date.$errors.length > 0

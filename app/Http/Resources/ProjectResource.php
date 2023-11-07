@@ -21,7 +21,7 @@ class ProjectResource extends JsonResource
             'device_type' => $this->device_type,
             'project_type' => $this->project_type,
             'start_date' =>  $this->start_date,
-            'end_date' => date('m/d/Y', strtotime($this->end_date)),
+            'end_date' => $this->end_date,
             'target' => $this->target,
             'country' => new CountryResource($this->country),
             'project_name' => $this->project_name,

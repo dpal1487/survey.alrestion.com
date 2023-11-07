@@ -66,8 +66,8 @@ export default defineComponent({
             form: this.$inertia.form({
                 project_name: this.project?.data?.project_name,
                 client: this.project?.data?.client?.id,
-                start_date: new Date(this.project?.data?.start_date) || '',
-                end_date: new Date(this.project?.data?.end_date) || '',
+                start_date: this.project?.data?.start_date || '',
+                end_date: this.project?.data?.end_date || '',
                 project_status: this.project?.data?.status,
                 target: this.project?.data?.target,
                 device_type: JSON.parse(this.project?.data?.device_type) || [],
@@ -306,16 +306,8 @@ export default defineComponent({
                             <div class="col-6">
                                 <div class="fv-row fs-5">
                                     <jet-label for="project-start" value="Project Start Date" />
-                                    <!-- <Datepicker v-model="v$.form.start_date.$model" id="project-start"
-                                        :format="customDateFormat" :inputFormat="customDateFormat"
-                                        class="form-control form-control-lg form-control-solid"
-                                        placeholder="Enter project start date" :class="v$.form.start_date.$errors.length > 0
-                                            ? 'is-invalid'
-                                            : ''
-                                            " /> -->
-
                                     <input type="date" v-model="v$.form.start_date.$model" id="project-end"
-                                        :format="customDateFormat" class="form-control form-control-lg form-control-solid"
+                                        class="form-control form-control-lg form-control-solid"
                                         placeholder="Enter project start date" :class="v$.form.start_date.$errors.length > 0
                                             ? 'is-invalid'
                                             : ''
@@ -330,16 +322,8 @@ export default defineComponent({
                             <div class="col-6">
                                 <div class="fv-row fs-5">
                                     <jet-label for="project-end" value="Project End Date" />
-                                    <!-- <Datepicker v-model="v$.form.end_date.$model" id="project-end" type="text"
-                                        :format="customDateFormat" :inputFormat="customDateFormat"
-                                        class="form-control form-control-lg form-control-solid"
-                                        placeholder="Enter project start date" :class="v$.form.end_date.$errors.length > 0
-                                            ? 'is-invalid'
-                                            : ''
-                                            " /> -->
-
                                     <input type="date" v-model="v$.form.end_date.$model" id="project-end"
-                                        :format="customDateFormat" class="form-control form-control-lg form-control-solid"
+                                        class="form-control form-control-lg form-control-solid"
                                         placeholder="Enter project start date" :class="v$.form.end_date.$errors.length > 0
                                             ? 'is-invalid'
                                             : ''

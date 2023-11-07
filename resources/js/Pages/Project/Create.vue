@@ -2,8 +2,6 @@
 import { defineComponent, ref } from "vue";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Head, Link } from "@inertiajs/inertia-vue3";
-import AppToolbar from "../../Layouts/AppToolbar.vue";
-import RadioType from "./Components/QuestionTypes/RadioType.vue"
 import Multiselect from "@vueform/multiselect";
 import InputError from "@/jetstream/InputError.vue";
 import JetValidationErrors from "@/Jetstream/ValidationErrors.vue";
@@ -11,7 +9,6 @@ import JetInput from "@/Jetstream/Input.vue";
 import JetLabel from "@/Jetstream/Label.vue";
 import useVuelidate from "@vuelidate/core";
 import { required, numeric, url } from "@vuelidate/validators";
-import Datepicker from 'vue3-datepicker'
 import { toast } from "vue3-toastify";
 export default defineComponent({
     props: ["clients", "countries", 'status'],
@@ -21,7 +18,6 @@ export default defineComponent({
     },
     components: {
         AppLayout,
-        AppToolbar,
         Link,
         Head,
         Multiselect,
@@ -29,8 +25,6 @@ export default defineComponent({
         JetLabel,
         JetValidationErrors,
         InputError,
-        Datepicker,
-        RadioType
     },
     validations() {
         return {
