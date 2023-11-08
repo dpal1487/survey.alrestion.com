@@ -36,6 +36,7 @@ export default defineComponent({
         return {
             projects: [],
             isLoading: false,
+            isFullScreenLoading: false,
         }
     },
     components: {
@@ -58,16 +59,16 @@ export default defineComponent({
     },
     methods: {
         async updateStatus(id, e) {
-            this.isLoading = true;
+            this.isFullScreenLoading = true;
             await utils.changeStatus(route("supplier.status"), {
                 id: id,
                 status: e,
             });
-            this.isLoading = false;
+            this.isFullScreenLoading = false;
         },
 
         sapmlingEdit(id) {
-            this.isLoading = true;
+            this.isFullScreenLoading = true;
             Inertia.get(route("sampling.edit", id))
         }
     }
@@ -75,6 +76,7 @@ export default defineComponent({
 </script>
 <template>
     <Modal :show="show" @onhide="$emit('hidemodal')" title="Suppliers" :isFullscreen="true" :id="id">
+        <loading :active="isFullScreenLoading" :can-cancel="true" :is-full-page="isFullPage"></loading>
         <div class="card-body p-0">
             <SectionLoader v-if="isLoading" :width="40" :height="40" />
             <div class="border rounded-3 p-5 mb-3 shadow-sm" v-else-if="projects?.length > 0"

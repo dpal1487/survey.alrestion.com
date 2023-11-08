@@ -82,10 +82,11 @@ export default defineComponent({
         </template>
         <div class="card card-flush d-flex justify-content-between">
             <div class="row mx-1">
-                <form @submit.prevent="search" class="card-header flex-grow-1 justify-content-start py-4 px-4 gap-2 gap-md-5">
+                <form @submit.prevent="search"
+                    class="card-header flex-grow-1 justify-content-start py-4 px-4 gap-2 gap-md-5">
                     <div class="d-flex align-items-center position-relative">
-                        <span class="svg-icon svg-icon-1 position-absolute ms-4"><svg width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <span class="svg-icon svg-icon-1 position-absolute ms-4"><svg width="24" height="24"
+                                viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1"
                                     transform="rotate(45 17.0365 15.1223)" fill="currentColor"></rect>
                                 <path
@@ -106,7 +107,7 @@ export default defineComponent({
                     </div>
                     <button type="submit" class="btn btn-primary">Search</button>
                 </form>
-                <div class="w-100 d-flex m-3 justify-content-end gap-5">
+                <!-- <div class="w-100 d-flex m-3 justify-content-end gap-5">
                     <label class="text-gray-700 fs-3 fw-semibold d-flex align-items-center">
                         Order By :
                     </label>
@@ -120,7 +121,7 @@ export default defineComponent({
                             @select="filterProjectNameData()" class="btn btn-sm btn-light py-2 px-0" placeholder="Project Name"
                             v-model="selectedSortByName" />
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
         <project-list :projects="projects.data" :status="status.data" :action="action" />
