@@ -43,20 +43,25 @@ class ProjectController extends Controller
 
     public function index(Request $request)
     {
-        if (!empty($request->project_id)) {
-            if ($request->project_id == 'asc') {
+        if (!empty($request->order_by)) {
+            if ($request->order_by == 'project_id_asc') {
                 $projects = Project::orderBy('project_id', 'asc');
             }
-            if ($request->project_id == 'desc') {
+            if ($request->order_by == 'project_id_desc') {
                 $projects = Project::orderBy('project_id', 'desc');
             }
-        } else if (!empty($request->project_name)) {
-            if ($request->project_name == 'asc') {
+            if (!empty($request->order_by == 'project_name_asc')) {
                 $projects = Project::orderBy('project_name', 'asc');
             }
-            if ($request->project_name == 'desc') {
+            if (!empty($request->order_by == 'project_name_desc')) {
                 $projects = Project::orderBy('project_name', 'desc');
             }
+            // if (!empty($request->order_by == 'client_name_asc')) {
+            //     $projects = Project::with(['client' => function ($q) {
+            //         $q->orderBy('name', 'asc');
+            //     }]);
+            //     return $projects->get();
+            // }
         } else {
             $projects = Project::orderBy('updated_at', 'desc')->where('status', '!=', 'close');
             if (Auth::user()->role->role->slug == 'user') {

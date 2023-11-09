@@ -17,11 +17,14 @@ export default defineComponent({
             isLoading: false,
             fullPage: true,
             title: "Projects",
-            selectedSortById: null,
-            selectedSortByName: null,
+            selectOrderBy: null,
             order_by: [
-                { label: 'asc', value: 'asc', },
-                { label: 'desc', value: 'desc', }
+                { label: 'Project Id ASC', value: 'project_id_asc', },
+                { label: 'Project Id DESC', value: 'project_id_desc', },
+                { label: 'Project Name ASC', value: 'project_name_asc', },
+                { label: 'Project Name DESC', value: 'project_name_desc', },
+                // { label: 'Client Name ASC', value: 'client_name_asc', },
+                // { label: 'Client Name DESC', value: 'client_name_desc', }
             ],
         };
     },
@@ -43,25 +46,17 @@ export default defineComponent({
                 },
             });
         },
-        filterData() {
-            console.log("see this", this.selectedSortById)
-            // this.isLoading = true;
-            // Inertia.get(route('projects', { order_by: this.projectId }));
-
-            // selectedSortByName
-        },
-
-        filterProjectIdData() {
+        orderBy() {
             this.isLoading = true;
-            Inertia.get(route('projects', { project_id: this.selectedSortById }));
+            console.log("Order By", this.selectOrderBy)
+            Inertia.get(route('projects', { order_by: this.selectOrderBy }),
+                {
+                    onFinish(response) {
+                        this.isLoading = false;
+                    }
+                });
         },
-        filterProjectNameData() {
-            this.isLoading = true;
-            Inertia.get(route('projects', { project_name: this.selectedSortByName }));
-        }
-
     },
-    created() { },
 });
 </script>
 <template>
@@ -80,10 +75,9 @@ export default defineComponent({
                 <i class="bi bi-plus-circle"></i>Add New Project</Link>
             </div>
         </template>
-        <div class="card card-flush d-flex justify-content-between">
-            <div class="row mx-1">
-                <form @submit.prevent="search"
-                    class="card-header flex-grow-1 justify-content-start py-4 px-4 gap-2 gap-md-5">
+        <div class="card">
+            <div class="mx-1 p-4 d-flex flex-wrap gap-5 align-items-center justify-content-between">
+                <form @submit.prevent="search" class="d-flex flex-wrap flex-grow-1 gap-5 gap-md-5 justify-content-start">
                     <div class="d-flex align-items-center position-relative">
                         <span class="svg-icon svg-icon-1 position-absolute ms-4"><svg width="24" height="24"
                                 viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -97,7 +91,7 @@ export default defineComponent({
                         <input type="text" v-model="form.q" class="form-control form-control-solid w-250px ps-14"
                             placeholder="Search Project" />
                     </div>
-                    <div class="w-100 mw-200px">
+                    <div class="w-100 mw-200px  ">
                         <Multiselect :can-clear="false" :options="status.data" label="label" valueProp="value"
                             class="btn btn-sm btn-light py-2 px-0" placeholder="Select Status" v-model="form.status" />
                     </div>
@@ -107,21 +101,10 @@ export default defineComponent({
                     </div>
                     <button type="submit" class="btn btn-primary">Search</button>
                 </form>
-                <!-- <div class="w-100 d-flex m-3 justify-content-end gap-5">
-                    <label class="text-gray-700 fs-3 fw-semibold d-flex align-items-center">
-                        Order By :
-                    </label>
-                    <div class="w-100 mw-200px d-flex align-items-center">
-                        <Multiselect :can-clear="false" :options="order_by" label="label" valueProp="value"
-                            @select="filterProjectIdData()" class="btn btn-sm btn-light py-2 px-0" placeholder="Project ID"
-                            v-model="selectedSortById" />
-                    </div>
-                    <div class="w-100 mw-200px d-flex align-items-center mx-5">
-                        <Multiselect :can-clear="false" :options="order_by" label="label" valueProp="value"
-                            @select="filterProjectNameData()" class="btn btn-sm btn-light py-2 px-0" placeholder="Project Name"
-                            v-model="selectedSortByName" />
-                    </div>
-                </div> -->
+                <div class="w-100 mw-200px mx-5 justify-content-end">
+                    <Multiselect :can-clear="false" :options="order_by" label="label" valueProp="value" @select="orderBy()"
+                        class="btn btn-sm btn-light py-2 px-0" placeholder="Order By" v-model="selectOrderBy" />
+                </div>
             </div>
         </div>
         <project-list :projects="projects.data" :status="status.data" :action="action" />
