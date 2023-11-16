@@ -70,6 +70,17 @@ export default defineComponent({
             window.localStorage.setItem("theme", theme);
         }
     },
+    mounted() {
+
+        console.log('e');
+        // to connect the public channel
+        // to connect the privatechannel
+        window.Echo.private('get-user.5').listen('UserEvent', (e) => {
+            console.log('go private');
+            //code for displaying the serve data
+            console.log(e); // the data from the server
+        })
+    }
 });
 </script>
 <template>

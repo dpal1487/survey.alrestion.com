@@ -1,6 +1,8 @@
 <?php
+
 namespace App\Events;
 
+use Illuminate\Broadcasting\Channel;
 use App\Http\Resources\NotificationResource;
 use App\Models\Notification;
 use Illuminate\Queue\SerializesModels;
@@ -10,7 +12,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
 class CreateProject implements ShouldBroadcast
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+	use Dispatchable, InteractsWithSockets, SerializesModels;
 
 	public $project;
 	public $notification;
@@ -22,16 +24,16 @@ class CreateProject implements ShouldBroadcast
 	 *
 	 * @return void
 	 */
-	public function __construct($notification,$project)
+	public function __construct($notification, $project)
 	{
 		$this->message = [
-			'title'=>$project->project_name,
-			'sub_title'=>"{$project->client->latter} New Project Added",
-			'source_url'=>"/project/{$project->id}?notif_id={$notification->id}",
-			'created_at'=>$project->created_at->diffForHumans(),
+			'title' => $project->project_name,
+			'sub_title' => "{$project->client->latter} New Project Added",
+			'source_url' => "/project/{$project->id}?notif_id={$notification->id}",
+			'created_at' => $project->created_at->diffForHumans(),
 
 		];
-		$this->notification=NotificationResource::collection(Notification::get());
+		$this->notification = NotificationResource::collection(Notification::get());
 	}
 
 	/**
@@ -41,6 +43,12 @@ class CreateProject implements ShouldBroadcast
 	 */
 	public function broadcastOn()
 	{
-		return ['project-created'];
+		return new Channel('create-project');
+	}
+
+	public function broadcastWith()
+	{
+		//echo"broadcastWith";
+		return  ['welcome' => 'New Project Created'];
 	}
 }

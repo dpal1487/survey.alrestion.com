@@ -13,6 +13,20 @@ const appName = window.document.getElementsByTagName('title')[0]?.innerText || '
 import "vue3-toastify/dist/index.css";
 import VueClipboard from 'vue3-clipboard';
 
+import Echo from "laravel-echo"
+import Pusher from "pusher-js";
+window.Pusher = Pusher;
+
+window.Echo = new Echo({
+    broadcaster: 'pusher',
+    key: 'local',
+    wsHost: '127.0.0.1',
+    wsPort: 6001,
+    cluster: "mt1",
+    forceTLS: false,
+    disableStats: true,
+
+});
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     //

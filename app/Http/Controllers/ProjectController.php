@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\UserEvent;
 use Inertia\Inertia;
 use App\Models\Client;
 use App\Models\Country;
@@ -253,6 +254,7 @@ class ProjectController extends Controller
     }
     public function update(Request $request, $id)
     {
+        $user = Auth::user();
         $request->validate([
             'project_name' => 'required',
             'client' => 'required',
@@ -276,6 +278,7 @@ class ProjectController extends Controller
             if ($request->action == 'project_show') {
                 return redirect('project/' . $id)->with('flash', updateMessage('Project'));
             }
+            broadcast(new UserEvent($user));
             return redirect('projects')->with('flash', updateMessage('Project'));
         }
         return redirect()->back()->withErrors(errorMessage());
