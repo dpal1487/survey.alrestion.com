@@ -28,6 +28,7 @@ use App\Http\Resources\SupplierListResource;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use App\Http\Resources\ProjectStatusResource;
 use App\Http\Resources\SupplierProjectResource;
+use App\Notifications\ActionNotification;
 
 class ProjectController extends Controller
 {
@@ -253,6 +254,7 @@ class ProjectController extends Controller
     }
     public function update(Request $request, $id)
     {
+        $project = Project::find($id);
         $request->validate([
             'project_name' => 'required',
             'client' => 'required',
@@ -276,6 +278,7 @@ class ProjectController extends Controller
             if ($request->action == 'project_show') {
                 return redirect('project/' . $id)->with('flash', updateMessage('Project'));
             }
+            // auth()->user()->notify(new ActionNotification($project , auth()->user()));
             return redirect('projects')->with('flash', updateMessage('Project'));
         }
         return redirect()->back()->withErrors(errorMessage());

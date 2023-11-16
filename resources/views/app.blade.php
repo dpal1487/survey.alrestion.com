@@ -25,6 +25,7 @@
     @routes
     @vite(['resources/js/app.js', 'resources/sass/app.scss', "resources/js/Pages/{$page['component']}.vue"])
     @inertiaHead
+    <script src="//{{ Request::getHost() }}:6001/socket.io/socket.io.js"></script>
 </head>
 
 <body id="app_body" data-kt-app-layout="dark-sidebar" data-kt-app-header-fixed="true" data-kt-app-sidebar-enabled="true" data-kt-app-sidebar-fixed="true" data-kt-app-sidebar-hoverable="true" data-kt-app-sidebar-push-header="true" data-kt-app-sidebar-push-toolbar="true" data-kt-app-sidebar-push-footer="true" data-kt-app-toolbar-enabled="true" class="app-default" data-new-gr-c-s-check-loaded="14.1097.0">

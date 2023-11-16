@@ -25,7 +25,7 @@
         "laravel/tinker": "^2.7",
         "maatwebsite/excel": "^3.1",
         "munafio/chatify": "^1.6",
-        "predis/predis": "^2.1",
+        "predis/predis": "^2.2",
         "pusher/pusher-php-server": "^7.2",
         "rinvex/laravel-subscriptions": "^6.1",
         "santigarcor/laratrust": "^7.2",

@@ -96,7 +96,7 @@ export default {
             .then((response) => {
                 if (response.data.success) {
                     toast.success(response.data.message)
-                    if (params.page == 'project-index') {
+                    if (params.status == 'close') {
                         Inertia.get('projects');
                     }
                 } else {

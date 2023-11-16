@@ -23,7 +23,7 @@ export default defineComponent({
     methods: {
         async updateStatus(id, e) {
             this.isLoading = true;
-            await utils.changeStatus(route('project.status'), { id: id, status: e, page: "project-index", });
+            await utils.changeStatus(route('project.status'), { id: id, status: e, });
             this.isLoading = false;
         },
         async confirmDelete(index) {
@@ -95,9 +95,9 @@ export default defineComponent({
                     <div class="text-left dropdown-menu menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
                         :aria-labelled:by="`dropdown-${project.id}`">
                         <div class="menu-item px-3">
-                            <Link :href="`project/${project.id}/edit`" class="menu-link">
+                            <a target="_blank" :href="`project/${project.id}/edit`" class="menu-link">
                             <span><i class="bi bi-pencil me-2"></i>Edit</span>
-                            </Link>
+                            </a>
                         </div>
                         <div class="menu-item px-3">
                             <span @click="cloneProject(project.id)" class="menu-link"><i
