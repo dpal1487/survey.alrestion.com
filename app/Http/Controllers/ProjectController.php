@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\SendMessage;
 use Inertia\Inertia;
 use App\Models\Client;
 use App\Models\Country;
@@ -10,7 +11,6 @@ use App\Models\Supplier;
 use App\Imports\IdImport;
 use App\Models\Respondent;
 use App\Models\ProjectLink;
-use App\Models\CloseProject;
 use Illuminate\Http\Request;
 use App\Models\ProjectStatus;
 use App\Exports\ProjectReport;
@@ -28,7 +28,6 @@ use App\Http\Resources\SupplierListResource;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use App\Http\Resources\ProjectStatusResource;
 use App\Http\Resources\SupplierProjectResource;
-use App\Notifications\ActionNotification;
 
 class ProjectController extends Controller
 {
@@ -278,6 +277,7 @@ class ProjectController extends Controller
             if ($request->action == 'project_show') {
                 return redirect('project/' . $id)->with('flash', updateMessage('Project'));
             }
+            event(new SendMessage($project));
             // auth()->user()->notify(new ActionNotification($project , auth()->user()));
             return redirect('projects')->with('flash', updateMessage('Project'));
         }

@@ -70,6 +70,11 @@ export default defineComponent({
             window.localStorage.setItem("theme", theme);
         }
     },
+    mounted() {
+        window.Echo.channel('send-message').listen('SendMessage', (event) => {
+            console.log("this is message event", event)
+        });
+    }
 });
 </script>
 <template>
