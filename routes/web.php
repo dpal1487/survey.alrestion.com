@@ -1,20 +1,22 @@
 <?php
 
-use App\Http\Controllers\AccountController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ClientController;
-use App\Http\Controllers\CloseProjectController;
-use App\Http\Controllers\CompanyController;
-use App\Http\Controllers\ExportExcelController;
-use App\Http\Controllers\ProjectController;
-use App\Http\Controllers\InvoiceController;
-use App\Http\Controllers\MappingController;
-use App\Http\Controllers\MasterController;
-use App\Http\Controllers\RedirectController;
-use App\Http\Controllers\SamplingController;
-use App\Http\Controllers\SupplierController;
-use App\Http\Controllers\SurveyInitController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\{
+    AccountController,
+    ClientController,
+    ExportExcelController,
+    CompanyController,
+    CloseProjectController,
+    ProjectController,
+    InvoiceController,
+    MappingController,
+    MasterController,
+    RedirectController,
+    SamplingController,
+    SupplierController,
+    SurveyInitController,
+    UserController
+};
 
 /*
 |--------------------------------------------------------------------------

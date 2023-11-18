@@ -2,12 +2,14 @@
 
 namespace App\Notifications;
 
+use App\Events\SendMessage;
 use App\Models\Project;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Notifications\Messages\BroadcastMessage;
 
 class ActionNotification extends Notification
 {
@@ -31,6 +33,15 @@ class ActionNotification extends Notification
     public function via($notifiable)
     {
         return ['database'];
+    }
+
+    public function toBroadcast($notifiable)
+    {
+        return new BroadcastMessage([
+            'message' => 'Your notification message here',
+            'channel' => 'send-message',
+            'event' => SendMessage::class,
+        ]);
     }
 
 

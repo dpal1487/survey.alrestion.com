@@ -72,8 +72,14 @@ export default defineComponent({
     },
     mounted() {
         window.Echo.channel('send-message').listen('SendMessage', (event) => {
-            console.log("this is message event", event)
+            console.log("this is event message", event)
         });
+
+        window.Echo.channel('send-message')
+            .notification((notification) => {
+                // Handle the notification here
+                console.log('Received notification:', notification);
+            });
     }
 });
 </script>
