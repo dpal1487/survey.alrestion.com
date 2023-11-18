@@ -278,8 +278,8 @@ class ProjectController extends Controller
             if ($request->action == 'project_show') {
                 return redirect('project/' . $id)->with('flash', updateMessage('Project'));
             }
-            event(new SendMessage($project));
-            auth()->user()->notify(new ActionNotification($project , auth()->user()));
+            broadcast(new SendMessage($project));
+            auth()->user()->notify(new ActionNotification($project, auth()->user()));
             return redirect('projects')->with('flash', updateMessage('Project'));
         }
         return redirect()->back()->withErrors(errorMessage());
