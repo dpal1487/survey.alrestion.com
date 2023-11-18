@@ -15,8 +15,10 @@ use Illuminate\Http\Request;
 use App\Models\ProjectStatus;
 use App\Exports\ProjectReport;
 use App\Exports\ExportIdExport;
+use App\Http\Resources\ActivityProjectResource;
 use App\Models\CloseRespondent;
 use App\Models\SupplierProject;
+use App\Models\ProjectActivity;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Resources\CountryResource;
@@ -148,6 +150,13 @@ class ProjectController extends Controller
                 'country_id' => $request->project_country,
                 'status' => $request->project_status,
             ])) {
+                $activity = ProjectActivity::create([
+                    "project_id" => $project->project_id,
+                    "type_id" => "status",
+                    "text" => "New Project create",
+                    "user_id"   => Auth::user()->id,
+
+                ]);
                 if (!empty($request->add_more)) {
                     return redirect("/project/create")->with('flash', createMessage('Project'));
                 }
@@ -216,6 +225,13 @@ class ProjectController extends Controller
                     ]);
                 }
             }
+            $activity = ProjectActivity::create([
+                "project_id" => $project->project_id,
+                "type_id" => "status",
+                "text" => "Project clone",
+                "user_id"   => Auth::user()->id,
+
+            ]);
             return response()->json(createMessage('Project Clone'));
         }
         return redirect()->back()->withErrors(errorMessage());
@@ -275,6 +291,13 @@ class ProjectController extends Controller
             'target' => $request->target,
             'status' => $request->project_status,
         ])) {
+            $activity = ProjectActivity::create([
+                "project_id" => $project->project_id,
+                "type_id" => "status",
+                "text" => "Project update",
+                "user_id"   => Auth::user()->id,
+
+            ]);
             if ($request->action == 'project_show') {
                 return redirect('project/' . $id)->with('flash', updateMessage('Project'));
             }
@@ -286,7 +309,16 @@ class ProjectController extends Controller
     }
     public function destroy($id)
     {
+        $project = Project::where('id', $id)->first();
         if (Project::where('id', $id)->delete()) {
+
+            $activity = ProjectActivity::create([
+                "project_id" => $project->project_id,
+                "type_id" => "status",
+                "text" => "Project delete",
+                "user_id"   => Auth::user()->id,
+
+            ]);
             ProjectLink::where('project_id', $id)->delete();
             return response()->json(deleteMessage('Project'));
         }
@@ -344,6 +376,20 @@ class ProjectController extends Controller
                 'clients' => $this->clients,
                 'status' => $this->status,
                 'suppliers' => $this->suppliers
+            ]);
+        }
+        return redirect()->back();
+    }
+
+    public function  activity($id)
+    {
+        $project = Project::find($id);
+        $projectActivities = ProjectActivity::where('project_id', $id)->orderBy('created_at', 'DESC')->paginate(3);
+
+        if ($project) {
+            return Inertia::render('Project/Activity', [
+                'project' => new ProjectResource($project),
+                'activities' => ActivityProjectResource::collection($projectActivities),
             ]);
         }
         return redirect()->back();

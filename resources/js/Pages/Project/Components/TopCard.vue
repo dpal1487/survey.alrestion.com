@@ -125,9 +125,9 @@ export default defineComponent({
                 this.form
                     .transform((data) => ({
                         ...data,
-                        
+
                     }))
-                    .post(this.route("project.update", this.project.id,{ start_date: formattedStartDate }), {
+                    .post(this.route("project.update", this.project.id, { start_date: formattedStartDate }), {
                         onSuccess: (data) => {
                             this.isEdit = false;
                             toast.success(
@@ -445,6 +445,14 @@ export default defineComponent({
         $page.props.user.role.role.slug == 'admin'
         ">
                     Suppliers</Link>
+                </li>
+                <li class="nav-item">
+                    <Link class="nav-link text-active-primary ms-0 me-10 py-5" :class="route().current() == 'project.activity'
+                        ? 'active'
+                        : ''
+                        " :href="`/project/${project.id}/activity`" v-if="$page.props.user.role.role.slug == 'pm' ||
+        $page.props.user.role.role.slug == 'admin'">
+                    Activity</Link>
                 </li>
             </ul>
         </div>
