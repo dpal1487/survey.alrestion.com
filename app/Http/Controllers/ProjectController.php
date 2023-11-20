@@ -44,6 +44,12 @@ class ProjectController extends Controller
         $this->status = ProjectStatus::orderBy('id', 'asc')->get();
     }
 
+    public function project($id)
+    {
+        $project = Project::find($id);
+
+        return $project;
+    }
     public function index(Request $request)
     {
         if (!empty($request->order_by)) {
@@ -292,7 +298,7 @@ class ProjectController extends Controller
             'status' => $request->project_status,
         ])) {
             $activity = ProjectActivity::create([
-                "project_id" => $project->project_id,
+                "project_id" => $id,
                 "type_id" => "status",
                 "text" => "Project update",
                 "user_id"   => Auth::user()->id,
@@ -347,10 +353,24 @@ class ProjectController extends Controller
                 }
                 $respondents = Respondent::where('project_id', '=', $request->id)->delete();
             }
+            $activity = ProjectActivity::create([
+                "project_id" => $request->id,
+                "type_id" => "status",
+                "text" => "Change status of project to close" . " project name " . $this->project($request->id)->project_name,
+                "user_id"   => Auth::user()->id,
+
+            ]);
             if (Project::where(['id' => $request->id])->update(['status' => $request->status])) {
                 return response()->json(updateMessage('Project status'));
             }
         } else {
+            $activity = ProjectActivity::create([
+                "project_id" => $request->id,
+                "type_id" => "status",
+                "text" => "Change status of project to " . $request->status. " project name " . $this->project($request->id)->project_name,
+                "user_id"   => Auth::user()->id,
+
+            ]);
             if (Project::where(['id' => $request->id])->update(['status' => $request->status])) {
                 return response()->json(updateMessage('Project status'));
             }
@@ -384,7 +404,8 @@ class ProjectController extends Controller
     public function  activity($id)
     {
         $project = Project::find($id);
-        $projectActivities = ProjectActivity::where('project_id', $id)->orderBy('created_at', 'DESC')->paginate(3);
+        $projectActivities = ProjectActivity::where('project_id', $id)->orderBy('created_at', 'DESC')->paginate(10);
+
 
         if ($project) {
             return Inertia::render('Project/Activity', [
@@ -399,6 +420,14 @@ class ProjectController extends Controller
     {
         if ($request->hasFile('file')) {
             if (Excel::import(new IdImport($request->id), $request->file('file')->store('files'))) {
+
+                $activity = ProjectActivity::create([
+                    "project_id" => $request->id,
+                    "type_id" => "status",
+                    "text" => "Project " . $this->project($request->id)->project_name . " import",
+                    "user_id"   => Auth::user()->id,
+                ]);
+
                 return response()->json(['success' => true, 'message' => 'Import file successfully']);
             }
             return response()->json(errorMessage());
@@ -408,6 +437,12 @@ class ProjectController extends Controller
     {
         $project = Project::find($id);
         if ($project) {
+            $activity = ProjectActivity::create([
+                "project_id" => $id,
+                "type_id" => "status",
+                "text" => "Project " . $project->project_name . " Export",
+                "user_id"   => Auth::user()->id,
+            ]);
             return Excel::download(new ExportIdExport($project->id), $project->project_id . '.xlsx');
         }
     }
@@ -415,6 +450,12 @@ class ProjectController extends Controller
     {
         $project = Project::find($id);
         if ($project) {
+            $activity = ProjectActivity::create([
+                "project_id" => $id,
+                "type_id" => "status",
+                "text" => "Project " . $project->project_name . " report download",
+                "user_id"   => Auth::user()->id,
+            ]);
             return Excel::download(new ProjectReport($id), $project->project_name . '.xlsx');
         }
     }

@@ -15,7 +15,8 @@ use App\Http\Controllers\{
     SamplingController,
     SupplierController,
     SurveyInitController,
-    UserController
+    UserController,
+    NotificationController,
 };
 
 /*
@@ -61,7 +62,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::get('project/{id}/edit', 'edit')->name('project.edit');
 
         Route::post('project/{id}/update', 'update')->name('project.update');
-        //Project Suppliers 
+        //Project Suppliers
         Route::get('project/{id}/suppliers', 'suppliers')->name('project.suppliers');
 
         //activity
@@ -72,7 +73,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::post('project/status', 'status')->name('project.status');
 
 
-        // Clone Project 
+        // Clone Project
         Route::post('project/clone', 'projectClone')->name('project.clone');
 
         Route::delete('project/{id}/removeid', 'removeIds')->name('project.removeid');
@@ -226,6 +227,8 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     Route::controller(ExportExcelController::class)->group(function () {
         Route::get('export/excel', 'exportExcelFile')->name('export.excel');
     });
+
+    route::get('notifications', [NotificationController::class, 'index'])->name('notifications');
 });
 
 Route::group(['prefix' => 'survey'], function () {

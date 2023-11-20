@@ -19,6 +19,7 @@ export default defineComponent({
             theme: 'system',
             notifications: [],
             isNotifLoading: false,
+            notificationDrop: false,
             themeModeDrop: false,
             form: {}
         };
@@ -48,19 +49,20 @@ export default defineComponent({
             });
         },
 
-        getNotifications() {
-            this.isNotifLoading = true;
-            axios
-                .get("/notifications/header", { params: { limit: 5 } })
-                .then((response) => {
-                    this.notifications = response.data.data;
-                })
-                .finally(() => (this.isNotifLoading = false));
-        },
+
         logout() {
             Inertia.post(route("logout"));
         },
+        getNotifications(value) {
+            this.notificationDrop = value;
 
+            axios
+                .get("/notifications", { params: { limit: 5 } })
+                .then((response) => {
+                    this.notifications = response.data.data;
+                })
+                .finally(() => { this.isNotifLoading = false });
+        },
         toggleThemeModeDrop(value) {
             this.themeModeDrop = value;
         }
@@ -74,7 +76,12 @@ export default defineComponent({
         window.Echo.channel('send-message').listen('SendMessage', (event) => {
             console.log("This is event message", event.title.project_name)
         });
-    }
+    },
+    computed: {
+        notificationCount() {
+            return this.notifications.length;
+        },
+    },
 });
 </script>
 <template>
@@ -103,6 +110,56 @@ export default defineComponent({
                                     placeholder="Search Project" v-model="form.q" />
                             </div>
                         </form>
+                    </div>
+                    <div @mouseleave="getNotifications(false)" @mouseenter="getNotifications(true)"
+                        class="position-relative app-navbar-item ms-1 ms-md-3">
+                        <button @click="getNotifications(notificationDrop ? false : true)"
+                            class="btn btn-icon btn-custom btn-icon-muted btn-active-light btn-active-color-primary w-30px h-30px w-md-40px h-md-40px position-relative">
+                            <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24"
+                                height="2.5em" width="1.5em" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="18" cy="6" r="3"></circle>
+                                <path
+                                    d="M18 19H5V6h8c0-.712.153-1.387.422-2H5c-1.103 0-2 .897-2 2v13c0 1.103.897 2 2 2h13c1.103 0 2-.897 2-2v-8.422A4.962 4.962 0 0 1 18 11v8z">
+                                </path>
+                            </svg>
+                            <span
+                                class="bullet bullet-dot bg-success h-6px w-6px position-absolute translate-middle top-0 start-50 animation-blink">
+                            </span>
+                        </button>
+
+                        <div v-if="notificationDrop" class="menu-sub-dropdown menu flex-column">
+                            <div class="d-flex flex-column bgi-no-repeat rounded-top"
+                                style="background-image:url('/assets/media/misc/menu-header-bg.jpg')">
+                                <h3 class="fw-semibold px-9 mt-10 mb-6 text-light">
+                                    Notifications <span class="fs-8 opacity-75 ps-3">{{ notificationCount }} reports</span>
+                                </h3>
+                            </div>
+                            <div class="overflow-auto h-600px">
+                                <div class="tab-pane" id="kt_topbar_notifications_1" role="tabpanel">
+                                    <div class="scroll-y mh-325px my-5 px-8" v-for="notification in notifications">
+                                        <div class="d-flex flex-stack py-4">
+                                            <div class="d-flex align-items-center">
+                                                <div class="symbol symbol-35px me-4">
+                                                    <span class="symbol-label bg-light-primary">
+                                                        <i class="ki-duotone ki-abstract-28 fs-2 text-primary"><span
+                                                                class="path1"></span><span class="path2"></span></i>
+                                                    </span>
+                                                </div>
+                                                <div class="mb-0 me-2">
+                                                    <a href="#" class="fs-6 text-gray-800 text-hover-primary fw-bold">Name {{
+                                                        JSON.parse(notification.data).user_name }}
+                                                        Project ID {{ JSON.parse(notification.data).project_id }} project Name {{
+                                                            JSON.parse(notification.data).project_name }}
+                                                    </a>
+                                                    <div class="text-gray-400 fs-7"></div>
+                                                </div>
+                                            </div>
+                                            <span class="badge badge-light fs-8">{{ notification.created }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div @mouseleave="toggleThemeModeDrop(false)" @mouseenter="toggleThemeModeDrop(true)"
                         class="position-relative app-navbar-item ms-1 ms-md-3">

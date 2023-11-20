@@ -37,7 +37,7 @@ export default defineComponent({
         },
         loadFirstPage() {
             this.isLoading = true;
-            Inertia.get(this.activities.links.first, {}, {
+            Inertia.get(this.activities.links.prev, {}, {
                 preserveState: true,
                 preserveScroll: true,
                 only: ['activities'],
@@ -78,7 +78,7 @@ export default defineComponent({
                         <div class="overflow-auto pe-3">
                             <div class="fs-5 fw-semibold mb-2">{{ activity.text }}</div>
                             <div class="d-flex align-items-center mt-1 fs-6">
-                                <div class="text-muted me-2 fs-7">{{ activity?.date }} Sent at {{ activity?.time }} by</div>
+                                <div class="text-muted me-2 fs-7">{{ activity?.date }} Sent at {{ activity?.time }} by {{activity.user }}</div>
                                 <!-- <div v-if="activity.profile" class="symbol symbol-circle symbol-25px"
                                     data-bs-toggle="tooltip" data-bs-boundary="window" data-bs-placement="top"
                                     :title="activity.user">
@@ -88,6 +88,7 @@ export default defineComponent({
                                     data-bs-boundary="window" data-bs-placement="top" title="User Profile">
                                     <img src="/assets/media/avatars/300-1.jpg" alt="img" />
                                 </div> -->
+
                                 <div class="symbol symbol-circle symbol-25px" data-bs-toggle="tooltip"
                                     data-bs-boundary="window" data-bs-placement="top" title="User Profile">
                                     <img src="/assets/media/avatars/300-1.jpg" alt="img" />
@@ -97,11 +98,9 @@ export default defineComponent({
                     </div>
                 </div>
             </div>
-            <div class="d-flex justify-content-center">
-
-                <button @click="loadMorePosts" v-if="activities.links.next" class="btn btn-primary ">Load More</button>
-                <button @click="loadFirstPage" v-if="activities.links.next == null" class="btn btn-primary ">First
-                    page</button>
+            <div class="d-flex justify-content-center gap-5">
+                <button @click="loadMorePosts" v-if="activities.links.next !== null" class="btn btn-primary ">Next</button>
+                <button @click="loadFirstPage" v-if="activities.links.prev !==  null" class="btn btn-primary ">Back</button>
             </div>
         </div>
     </div>
