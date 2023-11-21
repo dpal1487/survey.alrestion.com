@@ -320,18 +320,17 @@ export default defineComponent({
                                             white-space: nowrap;
                                             min-width: 150px;
                                         ">
-                                    Survey ID
+                                    Project ID
                                 </th>
                                 <td class="fs-6 fw-bold text-gray-800">
                                     {{ project.project_id }}
                                 </td>
                             </tr>
                             <tr>
-                                <th style="
-                                            white-space: nowrap;
+                                <th style="white-space: nowrap;
                                             min-width: 150px;
                                         ">
-                                    Survey Name
+                                    Project Name
                                 </th>
                                 <td class="fs-6 fw-bold text-gray-800">
                                     {{ project.project_name }}
