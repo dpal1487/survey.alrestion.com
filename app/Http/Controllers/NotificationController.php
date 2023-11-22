@@ -3,20 +3,33 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Models\Notification;
-use App\Events\NotificationCreated;
 use App\Http\Resources\NotificationsResource;
-use App\Models\User;
+use Inertia\Inertia;
 
 class NotificationController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $notification = Notification::orderBy('created_at', 'desc')
-            ->take(20)
-            ->get();
+        if ($request->limit == 10)
+        {
+            $notifications = Notification::orderBy('created_at', 'desc')
+                ->take(10)
+                ->get();
 
-        return response()->json(['success' => true, 'data' => NotificationsResource::collection($notification)]);
+            return response()->json(['success' => true, 'data' => NotificationsResource::collection($notifications)]);
+        }
+        else{
+            $notifications = Notification::orderBy('created_at', 'desc')->get();
+            return Inertia::render('Notification', [
+                'notifications' =>NotificationsResource::collection( $notifications)
+            ]);
+            // return Inertia::render('Notification', [
+            //     'notification' =>NotificationsResource::collection( $notifications),
+            // ]);
+
+
+        }
     }
 }
+

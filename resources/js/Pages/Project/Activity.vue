@@ -47,8 +47,8 @@ export default defineComponent({
                 </div>
             </div>
             <div class="card-body">
+                <ActivityList :activities="activities" />
                 <div class="tab-content">
-                    <ActivityList :activities="activities" />
                 </div>
             </div>
         </div>

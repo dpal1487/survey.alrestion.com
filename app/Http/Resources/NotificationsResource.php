@@ -18,6 +18,8 @@ class NotificationsResource extends JsonResource
             return [
                 'data' => $this->data,
                 'created' => $this->getTimeDifference(),
+                'date' => date('d-M-y', strtotime($this->created_at)),
+                'time' => date('h:s A', strtotime($this->created_at)),
             ];
     }
 

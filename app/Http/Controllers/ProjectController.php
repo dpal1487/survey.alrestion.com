@@ -159,10 +159,13 @@ class ProjectController extends Controller
                 $activity = ProjectActivity::create([
                     "project_id" => $project->project_id,
                     "type_id" => "status",
-                    "text" => "New Project create",
+                    "text" => $request->project_name .' was created',
                     "user_id"   => Auth::user()->id,
 
                 ]);
+                broadcast(new SendMessage($project));
+                auth()->user()->notify(new ActionNotification($project, auth()->user(),$request->project_name .' was created'));
+
                 if (!empty($request->add_more)) {
                     return redirect("/project/create")->with('flash', createMessage('Project'));
                 }
@@ -234,10 +237,12 @@ class ProjectController extends Controller
             $activity = ProjectActivity::create([
                 "project_id" => $project->project_id,
                 "type_id" => "status",
-                "text" => "Project clone",
+                "text" => $request->project_name .' was clone',
                 "user_id"   => Auth::user()->id,
 
             ]);
+            broadcast(new SendMessage($project));
+            auth()->user()->notify(new ActionNotification($project, auth()->user(),$request->project_name .' was clone'));
             return response()->json(createMessage('Project Clone'));
         }
         return redirect()->back()->withErrors(errorMessage());
@@ -300,15 +305,15 @@ class ProjectController extends Controller
             $activity = ProjectActivity::create([
                 "project_id" => $id,
                 "type_id" => "status",
-                "text" => "Project update",
+                "text" => $request->project_name ." was updated",
                 "user_id"   => Auth::user()->id,
 
             ]);
+            broadcast(new SendMessage($project));
+            auth()->user()->notify(new ActionNotification($project, auth()->user(),$request->project_name .' was updated'));
             if ($request->action == 'project_show') {
                 return redirect('project/' . $id)->with('flash', updateMessage('Project'));
             }
-            broadcast(new SendMessage($project));
-            auth()->user()->notify(new ActionNotification($project, auth()->user()));
             return redirect('projects')->with('flash', updateMessage('Project'));
         }
         return redirect()->back()->withErrors(errorMessage());
@@ -321,10 +326,13 @@ class ProjectController extends Controller
             $activity = ProjectActivity::create([
                 "project_id" => $project->project_id,
                 "type_id" => "status",
-                "text" => "Project delete",
+                "text" => $project->project_name .' was deleted',
                 "user_id"   => Auth::user()->id,
 
             ]);
+            broadcast(new SendMessage($this->project($id)));
+            auth()->user()->notify(new ActionNotification($this->project($id), Auth::user() , $project->project_name .' was deleted'));
+
             ProjectLink::where('project_id', $id)->delete();
             return response()->json(deleteMessage('Project'));
         }
@@ -333,6 +341,8 @@ class ProjectController extends Controller
 
     public function status(Request $request)
     {
+        $notification = $this->project($request->id)->project_name." has been " . $request->status ;
+
         if ($request->status == 'close') {
             $respondents = Respondent::where('project_id', '=', $request->id)->get();
             if (count($respondents) > 0) {
@@ -356,10 +366,12 @@ class ProjectController extends Controller
             $activity = ProjectActivity::create([
                 "project_id" => $request->id,
                 "type_id" => "status",
-                "text" => "Change status of project to close" . " project name " . $this->project($request->id)->project_name,
+                "text" => $notification,
                 "user_id"   => Auth::user()->id,
 
             ]);
+            broadcast(new SendMessage($this->project($request->id)));
+            auth()->user()->notify(new ActionNotification($this->project($request->id), Auth::user() , $notification));
             if (Project::where(['id' => $request->id])->update(['status' => $request->status])) {
                 return response()->json(updateMessage('Project status'));
             }
@@ -367,10 +379,13 @@ class ProjectController extends Controller
             $activity = ProjectActivity::create([
                 "project_id" => $request->id,
                 "type_id" => "status",
-                "text" => "Change status of project to " . $request->status. " project name " . $this->project($request->id)->project_name,
+                "text" => $notification,
                 "user_id"   => Auth::user()->id,
 
             ]);
+
+            broadcast(new SendMessage($this->project($request->id)));
+            auth()->user()->notify(new ActionNotification($this->project($request->id), Auth::user() , $notification));
             if (Project::where(['id' => $request->id])->update(['status' => $request->status])) {
                 return response()->json(updateMessage('Project status'));
             }
@@ -427,6 +442,8 @@ class ProjectController extends Controller
                     "text" => "Project " . $this->project($request->id)->project_name . " import",
                     "user_id"   => Auth::user()->id,
                 ]);
+                broadcast(new SendMessage($this->project($request->id)));
+                auth()->user()->notify(new ActionNotification($this->project($request->id), Auth::user() , "Project " . $this->project($request->id)->project_name . " import",));
 
                 return response()->json(['success' => true, 'message' => 'Import file successfully']);
             }
@@ -443,6 +460,9 @@ class ProjectController extends Controller
                 "text" => "Project " . $project->project_name . " Export",
                 "user_id"   => Auth::user()->id,
             ]);
+            broadcast(new SendMessage($this->project($id)));
+            auth()->user()->notify(new ActionNotification($this->project($id), Auth::user() , $this->project($id)->project_name . " export",));
+
             return Excel::download(new ExportIdExport($project->id), $project->project_id . '.xlsx');
         }
     }
@@ -453,9 +473,12 @@ class ProjectController extends Controller
             $activity = ProjectActivity::create([
                 "project_id" => $id,
                 "type_id" => "status",
-                "text" => "Project " . $project->project_name . " report download",
+                "text" =>  $project->project_name . " report download",
                 "user_id"   => Auth::user()->id,
             ]);
+            broadcast(new SendMessage($this->project($id)));
+            auth()->user()->notify(new ActionNotification($this->project($id), Auth::user() , $this->project($id)->project_name . " report download",));
+
             return Excel::download(new ProjectReport($id), $project->project_name . '.xlsx');
         }
     }

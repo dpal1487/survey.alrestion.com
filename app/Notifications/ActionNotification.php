@@ -18,10 +18,13 @@ class ActionNotification extends Notification
     public $user;
     public $project;
 
-    public function __construct(Project $project, User $user)
+    public $activity;
+
+    public function __construct(Project $project, User $user , $activity)
     {
         $this->user = $user;
         $this->project = $project;
+        $this->activity = $activity;
     }
 
     /**
@@ -52,6 +55,7 @@ class ActionNotification extends Notification
             'id' => $this->project->id,
             'project_id' => $this->project->project_id,
             'project_name' => $this->project->project_name,
+            'activity' => $this->activity,
         ];
     }
 }

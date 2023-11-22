@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\SendMessage;
 use App\Http\Resources\CountryResource;
 use App\Http\Resources\ProjectLinkResource;
 use App\Http\Resources\ProjectResource;
@@ -9,9 +10,11 @@ use App\Http\Resources\RespondentResource;
 use App\Http\Resources\SupplierProjectResource;
 use App\Models\Country;
 use App\Models\Project;
+use App\Models\ProjectActivity;
 use App\Models\ProjectLink;
 use App\Models\Respondent;
 use App\Models\SupplierProject;
+use App\Notifications\ActionNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -181,8 +184,25 @@ class MappingController extends Controller
 
     public function status(Request $request)
     {
+        $project =  ProjectLink::where(['id' => $request->id])->first();
+
+        $statusValue =  $request->status ? "activate" : "inactivate";
+
+
+
         if (ProjectLink::where(['id' => $request->id])->update(['status' => $request->status ? 1 : 0])) {
             $status = $request->status  ? "activate" : "inactivate";
+
+            $activity = ProjectActivity::create([
+                "project_id" => $project->project_id,
+                "type_id" => "status",
+                "text" =>  $statusValue,
+                "user_id"   => Auth::user()->id,
+            ]);
+            broadcast(new SendMessage($project->project_id));
+            auth()->user()->notify(new ActionNotification(Project::where('id' ,  $project->project_id)->first(), Auth::user() ,$project->project_name." has been " . $statusValue,));
+
+
             return response()->json(statusMessage('Project Link'));
         }
         return response()->json(errorMessage());

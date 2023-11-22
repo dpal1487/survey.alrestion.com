@@ -87,7 +87,6 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     });
     // });
 
-
     Route::group(['middleware' => 'role:pm,admin'], function () {
         Route::controller(ClientController::class)->group(function () {
             Route::get('clients', 'index')->name('clients.index');
@@ -229,6 +228,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     });
 
     route::get('notifications', [NotificationController::class, 'index'])->name('notifications');
+    // route::get('notifications', [NotificationController::class, 'index'])->name('notifications');
 });
 
 Route::group(['prefix' => 'survey'], function () {
