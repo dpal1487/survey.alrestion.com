@@ -62,14 +62,7 @@ export default defineComponent({
                 })
                 .finally(() => { this.isNotifLoading = false });
         },
-        getAllNotifications(value) {
-            axios
-                .get("/notifications", { params: { notifications: value} })
-                .then((response) => {
-                    this.notifications = response.data.data;
-                })
-                .finally(() => { this.isNotifLoading = false });
-        },
+
         toggleThemeModeDrop(value) {
             this.themeModeDrop = value;
         }
